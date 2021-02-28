@@ -9,7 +9,7 @@
 ToM este o aplicație WEB de gestiune a zilelor de concediu ale angajaților tuturor departamentelor unei firme, fiind folosită strict pentru uz intern.
 Ea este administrată de departamentul de IT al firmei, care asigură mentenața și înregistrarea de conturi de autentificare ale angajaților, solicitate de departamentul de HR.
 
--   Roluri la autentificare
+###  Roluri la autentificare:
 
 -   Angajat (pentru care se cunoaște liderul de echipă și departamenul în care lucrează)
 -   Reprezentant HR
