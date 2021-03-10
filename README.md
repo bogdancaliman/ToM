@@ -42,4 +42,8 @@ Fiecare angajat poate solicita prin intermediul aplicației tipul de concediu (m
 -   posibilitatea de feedback pentru cereri
 -   vizualizarea starii cererii(acceptata/respinsa)
 
-![](/Architecture.png)
+![](/images/Architecture.png)
+![](/images/LogIn.png)
+![](/images/Request.png)
+![](/images/HolidayRequest.png)
+![](/images/Calendar.png)
