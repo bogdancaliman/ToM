@@ -15,7 +15,7 @@ public class Example {
 
   private String email;
 
-  private String nr_tel;
+  private String nr_tel_fix;
   private String address;
 
   public Integer getId() {
@@ -50,11 +50,11 @@ public class Example {
     this.email = email;
   }
 
-  public String getNr_tel() {
-    return nr_tel;
+  public String getNr_tel_fix() {
+    return nr_tel_fix;
   }
 
-  public void setNr_tel(String nr_tel) {
-    this.nr_tel = nr_tel;
+  public void setNr_tel_fix(String nr_tel_fix) {
+    this.nr_tel_fix = nr_tel_fix;
   }
 }
