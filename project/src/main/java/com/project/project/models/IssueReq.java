@@ -53,7 +53,7 @@ public class IssueReq {
     public String toString() {
         return "IssueReq{" +
                 "id=" + id +
-                ", description='" + description + ''' +
+                ", description='" + description + '\'' +
                 ", account=" + account +
                 '}';
     }
