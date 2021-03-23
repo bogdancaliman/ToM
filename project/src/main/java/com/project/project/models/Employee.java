@@ -1,7 +1,6 @@
 package com.project.project.models;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
