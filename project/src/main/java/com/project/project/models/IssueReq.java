@@ -2,10 +2,11 @@ package com.project.project.models;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.io.Serializable;
 
 @Entity(name = "IssueRequest")
 @Table(name = "issue_req")
-public class IssueReq {
+public class IssueReq implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
@@ -28,12 +29,24 @@ public class IssueReq {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Account getAccount() {
         return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Override

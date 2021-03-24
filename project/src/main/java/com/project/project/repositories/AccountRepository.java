@@ -6,4 +6,5 @@ import com.project.project.models.Account;
 
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Integer> {
+    Account findByUsername(String username);
 }
