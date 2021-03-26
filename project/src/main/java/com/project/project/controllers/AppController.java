@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.project.project.services.SessionService;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -29,8 +29,6 @@ public class AppController {
         if(sessionService.amILoggedIn(request))
             return "redirect:/";
 
-        model.addAttribute("error", "");
-        model.addAttribute("user", "");
         return "auth";
     }
 

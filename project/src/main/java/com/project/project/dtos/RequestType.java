@@ -1,4 +1,4 @@
-package com.project.project.models;
+package com.project.project.dtos;
 
 public enum RequestType {
     Med,
