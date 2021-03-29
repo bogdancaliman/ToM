@@ -2,7 +2,6 @@ package com.project.project.models;
 
 import lombok.*;
 import javax.persistence.*;
-import java.util.Objects;
 import java.io.Serializable;
 
 @Getter
@@ -23,5 +22,8 @@ public class IssueReq implements Serializable {
     @JoinColumn(name = "FK_employee")
     private Account account;
 
-    
+    public IssueReq(String description, Account account) {
+        this.description = description;
+        this.account = account;
+    }
 }

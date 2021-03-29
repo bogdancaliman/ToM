@@ -1,6 +1,5 @@
 package com.project.project.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.thymeleaf.context.Context;
 import com.project.project.models.Account;

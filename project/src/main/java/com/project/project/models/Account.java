@@ -4,7 +4,6 @@ import com.project.project.models.ResetPassReq;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.io.Serializable;
 
@@ -48,5 +47,11 @@ public class Account implements Serializable {
     @JoinColumn(name = "FK_tl")
     private Account tl;
 
-    
+     public Account(String username, String password, String salt, Employee employee, Account tl) {
+        this.username = username;
+        this.password = password;
+        this.salt = salt;
+        this.employee = employee;
+        this.tl = tl;
+    }
 }

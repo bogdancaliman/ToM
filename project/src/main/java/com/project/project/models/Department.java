@@ -3,9 +3,6 @@ package com.project.project.models;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 import java.io.Serializable;
 
 @Getter
@@ -22,5 +19,7 @@ public class Department implements Serializable {
 
     private String name;
 
-    
+    public Department(String name) {
+        this.name = name;
+    }
 }
