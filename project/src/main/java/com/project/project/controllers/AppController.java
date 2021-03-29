@@ -1,34 +1,25 @@
 package com.project.project.controllers;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.project.project.services.SessionService;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
 public class AppController {
-
-    @Autowired
-    private SessionService sessionService;
     
     @GetMapping("/")
-    public String index(Model model, HttpServletRequest request) {
-        if(!sessionService.amILoggedIn(request))
+    public String index(HttpServletRequest request) {
+        if(request.getSession().getAttribute("active")==null)
             return "redirect:/auth";
-        model.addAttribute("name", "AuthPage");
         return "index";
     }
 
     @GetMapping("/auth")
-    public String auth(Model model, HttpServletRequest request) {
-        if(sessionService.amILoggedIn(request))
+    public String auth(HttpServletRequest request) {
+        if(request.getSession().getAttribute("active")!=null)
             return "redirect:/";
-
         return "auth";
     }
 
