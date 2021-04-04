@@ -6,8 +6,8 @@ body {
 }
 #login .container #login-row #login-column #login-box {
     margin-top: 20%;
-    border: 1px solid #9e2727;
-    background-color: #4543a5;
+    border: 1px solid #9C9C9C;
+    background-color: #EAEAEA;
 }
 #login .container #login-row #login-column #login-box form {
     padding: 20px;
