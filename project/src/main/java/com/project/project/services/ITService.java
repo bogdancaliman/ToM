@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.Map;
 
 @Service
 public class ITService {
@@ -28,6 +29,12 @@ public class ITService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private IssueReqRepository issueReqRepository;
+
+    public void reportIssueWithData(Map<String, String> params) {
+
+        issueReqRepository.save(new IssueReq(params.get("description" ),accountRepository.findById(Integer.parseInt(params.get("myId")))));   // to save the issue req in the data base
+
+    }
 
     public void generateAccount(int id_empl, int id_tl) throws SystemException {
         Employee emp = employeeRepository.findById(id_empl);
