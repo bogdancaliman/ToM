@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import com.project.project.services.AppRefreshService;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AppController {
@@ -13,18 +15,13 @@ public class AppController {
     private AppRefreshService appRefreshService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request) {
+    public ModelAndView index(HttpServletRequest request, RedirectAttributes ra) {
+        ModelAndView mv = new ModelAndView("index");
         appRefreshService.refreshData();
-        if(request.getSession().getAttribute("active")==null)
-            return "redirect:/auth";
-        return "index";
-    }
-
-    
-
-    @GetMapping("/addEmployeeRecord")
-    public String addEmployeeRecord() {
-        return "addEmployeeRecord";
+        if(request.getSession().getAttribute("active")==null) {
+            mv = new ModelAndView("redirect:/auth");
+        }
+        return mv;
     }
 
     @GetMapping("/calendar")
@@ -46,8 +43,7 @@ public class AppController {
     public String reqStatus() {
         return "reqStatus";
     }
-
-
+    
     @GetMapping("/reportIssue")
     public String reportIssue() {
         return "reportIssue";

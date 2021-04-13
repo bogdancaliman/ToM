@@ -6,6 +6,7 @@ import com.project.project.exceptions.EmailUsedException;
 import com.project.project.exceptions.SignUpException;
 import com.project.project.models.Department;
 import com.project.project.models.Employee;
+
 import com.project.project.repositories.DepartmentRepository;
 import com.project.project.repositories.EmployeeRepository;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 public class HRService {
     @Autowired
     private EmployeeRepository employeeRepository;
+
 
     @Autowired
     private DepartmentRepository departmentRepository;
