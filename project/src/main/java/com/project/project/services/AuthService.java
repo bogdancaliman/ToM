@@ -2,7 +2,6 @@ package com.project.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.project.project.exceptions.EmptyFiledException;
 import com.project.project.exceptions.PasswordMatchException;
 import com.project.project.exceptions.SystemException;
 import com.project.project.exceptions.UserNotFoundException;
@@ -27,12 +26,6 @@ public class AuthService {
         return acc;
     }
 
-
-    public void validateData(String username, String password) throws EmptyFiledException {
-        if (username.equals("") || password.equals(""))
-            throw new EmptyFiledException();
-
-    }
 
     public void checkCredentials(Account acc, String password) throws SystemException, PasswordMatchException {
         try {

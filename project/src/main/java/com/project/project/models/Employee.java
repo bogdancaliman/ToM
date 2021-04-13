@@ -1,7 +1,7 @@
 package com.project.project.models;
 
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Date;
 import java.io.Serializable;
@@ -28,6 +28,8 @@ public class Employee implements Serializable {
     @JoinColumn(name = "FK_department")
     private Department department;
 
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private Account account;
 

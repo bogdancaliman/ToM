@@ -6,4 +6,5 @@ import com.project.project.models.Department;
 
 @Repository
 public interface DepartmentRepository extends CrudRepository<Department, Integer> {
+    Department findById(int id);
 }
