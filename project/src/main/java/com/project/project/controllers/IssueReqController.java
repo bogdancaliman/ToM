@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.project.project.exceptions.*;
 import com.project.project.models.Account;
 import com.project.project.services.AuthService;
+import com.project.project.services.IssueReqService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -18,32 +19,39 @@ import java.util.Map;
 
 @Controller
 
-public class IssueRController {
+public class IssueReqController {
 
-    //@Autowired
+    @Autowired
+    IssueReqService issueReqService;
+
 
     @GetMapping("/reportIssue")
     public ModelAndView reportIssue(HttpServletRequest request, RedirectAttributes ra) {
         ModelAndView mv = new ModelAndView("reportIssue");
         Account acc = (Account) request.getSession().getAttribute("active");
-        if(acc == null) {
+        if (acc == null) {
             mv = new ModelAndView("redirect:/auth");
             ra.addFlashAttribute("upperNotification", "Please log in again (Session expired)!");
             return mv;
         }
-        mv.addObject("myID",acc.getId());
+        mv.addObject("myID", acc.getId());
         return mv;
     }
 
     @PostMapping("/reportIssue")
 
-    public String reportIssue(HttpServletRequest request) {
+    public ModelAndView reportIssue(@RequestParam Map<String, String> params, RedirectAttributes ra, HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("redirect:/");
         Account acc = (Account) request.getSession().getAttribute("active");
-        if (acc != null) {
-            //acc.
-            return "reportIssue";
-        } else
-            return "redirect:/auth";
+        if (acc == null) {
+            mv = new ModelAndView("redirect:/auth");
+            ra.addFlashAttribute("upperNotification", "Please log in again (Session expired)!");
+            return mv;
+
+        }
+        issueReqService.reportIssueWithData(params);
+        ra.addFlashAttribute("upperNotification", "Issue reported!");
+        return mv;
     }
 
 }
