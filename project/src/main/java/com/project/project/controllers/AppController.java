@@ -20,6 +20,7 @@ public class AppController {
         appRefreshService.refreshData();
         if(request.getSession().getAttribute("active")==null) {
             mv = new ModelAndView("redirect:/auth");
+            return mv;
         }
         return mv;
     }
@@ -42,11 +43,6 @@ public class AppController {
     @GetMapping("/reqStatus")
     public String reqStatus() {
         return "reqStatus";
-    }
-    
-    @GetMapping("/reportIssue")
-    public String reportIssue() {
-        return "reportIssue";
     }
 
 } 

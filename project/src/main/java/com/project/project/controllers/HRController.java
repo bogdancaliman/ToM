@@ -32,6 +32,7 @@ public class HRController {
             if(request.getSession().getAttribute("active")==null) {
                 mv = new ModelAndView("redirect:/auth");
                 ra.addFlashAttribute("upperNotification", "Please log in again (Session expired)!");
+                return mv;
             }
 
             mv.addObject("departments", hrService.loadDepartments());
@@ -51,6 +52,7 @@ public class HRController {
         if(request.getSession().getAttribute("active")==null) {
             mv = new ModelAndView("redirect:/auth");
             ra.addFlashAttribute("upperNotification", "Please log in again (Session expired)!");
+            return mv;
         }
         try {
             hrService.validateFormData(params);
