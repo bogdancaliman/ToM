@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.project.project.dtos.RequestType;
 import com.project.project.models.Account;
 import com.project.project.models.HolidayReq;
+import com.project.project.dtos.RequestStatus;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.HolidayReqRepository;
 import java.text.DateFormat;
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 @Service
 public class EmployeeService {
 
@@ -28,7 +30,7 @@ public class EmployeeService {
         else {
             List<Account> colleges;
             if (acc_current.getTl() == null) {
-                colleges=accountRepository.findAllByTlIsNull();
+                colleges = accountRepository.findAllByTlIsNull();
                 colleges.remove(acc_current);
                 if (colleges.size() != 0)
                     return colleges;
@@ -56,22 +58,17 @@ public class EmployeeService {
             end_date = new Date();
         }
 
-        Account account_tl;
-        // if()
-
         HolidayReq newHolidayReq = new HolidayReq(
                 RequestType.valueOf(params.get("requestTypeId")),
-                null,
+                RequestStatus.sentTL,
                 params.get("description"),
                 start_date,
                 end_date,
-                accountRepository.findById(account_req),
-                new Account()
+                account_req,
+                account_req.getTl()
         );
 
-
-        // holidayReqRepository.save(newHolidayReq);
-        // return newEmployee.getId();
+        holidayReqRepository.save(newHolidayReq);
     }
 
 
