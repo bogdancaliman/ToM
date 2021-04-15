@@ -8,9 +8,12 @@ import com.project.project.models.HolidayReq;
 import com.project.project.dtos.RequestStatus;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.HolidayReqRepository;
+import com.project.project.dtos.WebEvent;
+import com.project.project.models.Employee;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,11 +68,35 @@ public class EmployeeService {
                 start_date,
                 end_date,
                 account_req,
-                account_req.getTl()
+                accountRepository.findById(Integer.parseInt(params.get("delegateId")))
         );
 
         holidayReqRepository.save(newHolidayReq);
     }
 
+    public List<WebEvent> loadHolidayReqByTl(Account tl) {
+        List<HolidayReq> lst = holidayReqRepository.findAllByAccountReq_Tl(tl);
+        List<WebEvent> result = new ArrayList<>();
+        String color = "black";
+        for (HolidayReq h : lst) {
+            switch (h.getType()) {
+                case Fam:
+                    color = "#E27D60";
+                    break;
+                case Hof:
+                    color = "#85DCB";
+                    break;
+                case Med:
+                    color = "#E8A87C";
+                    break;
+                case Rel:
+                    color = "#C38D9E";
+                    break;
+
+            }
+            result.add(new WebEvent(h.getId(), h.getAccountReq().getEmployee().getName(), h.getStart(), h.getEnd(), color));
+        }
+        return result;
+    }
 
 }

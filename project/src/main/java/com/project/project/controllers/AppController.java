@@ -35,11 +35,6 @@ public class AppController {
         return "maintainApp";
     }
 
-    @GetMapping("/pendingReq")
-    public String pendingReq() {
-        return "pendingReq";
-    }
-
     @GetMapping("/reqStatus")
     public String reqStatus() {
         return "reqStatus";
