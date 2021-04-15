@@ -62,4 +62,14 @@ public class ITController {
         return "redirect:/";
 
     }
+
+    @GetMapping("/pendingIssue")
+    public ModelAndView pendingIssue() {
+
+        ModelAndView mv= new ModelAndView("pendingIssue");
+        mv.addObject("ListPendingIssue", itService.loadAllPendingIssues());
+        return mv;
+
+
+    }
 } 

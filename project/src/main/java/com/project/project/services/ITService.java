@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import com.project.project.dtos.CredentialsEmail;
+import com.project.project.dtos.PendingIssue;
 import com.project.project.models.Account;
 import com.project.project.models.Employee;
 import com.project.project.models.IssueReq;
@@ -15,8 +16,8 @@ import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ITService {
@@ -32,7 +33,7 @@ public class ITService {
 
     public void reportIssueWithData(Map<String, String> params) {
 
-        issueReqRepository.save(new IssueReq(params.get("description" ),accountRepository.findById(Integer.parseInt(params.get("myId")))));   // to save the issue req in the data base
+        issueReqRepository.save(new IssueReq(params.get("description"), accountRepository.findById(Integer.parseInt(params.get("myId")))));   // to save the issue req in the data base
 
     }
 
@@ -88,4 +89,16 @@ public class ITService {
     public void informItAboutError(int id_empl) {
         issueReqRepository.save(new IssueReq("The user with id: " + id_empl + "doesn't have an account due to some system problems!", null));
     }
+
+    public List<PendingIssue> loadAllPendingIssues() {
+
+        Comparator<IssueReq> compareByIssueReq = Comparator.comparingInt(i -> i.getAccount().getEmployee().getDepartment().getId());
+
+
+        List<IssueReq> lst = issueReqRepository.findAll();
+        lst.sort(compareByIssueReq);
+        return lst.stream().map(s -> new PendingIssue(s.getId(), s.getAccount().getEmployee().getDepartment().getName(), s.getAccount().getEmployee().getName(), s.getDescription())).collect(Collectors.toList());
+
+    }
+
 } 
