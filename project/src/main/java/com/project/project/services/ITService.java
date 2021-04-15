@@ -100,5 +100,9 @@ public class ITService {
         return lst.stream().map(s -> new PendingIssue(s.getId(), s.getAccount().getEmployee().getDepartment().getName(), s.getAccount().getEmployee().getName(), s.getDescription())).collect(Collectors.toList());
 
     }
-
+    
+    public void deleteIssueReqByID (int id)
+    {
+        issueReqRepository.deleteById(id);
+    }
 } 
