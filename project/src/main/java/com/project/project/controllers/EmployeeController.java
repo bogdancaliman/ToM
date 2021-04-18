@@ -69,11 +69,11 @@ public class EmployeeController {
     public List<WebEvent> loadHolidayReq(HttpServletRequest request) {
         return employeeService.loadHolidayReqByTl((Account) request.getSession().getAttribute("active"));
     }
-    
+
     @PostMapping("/acceptReq")
     @ResponseBody
-    public void acceptReq(@RequestParam String id) {
-        employeeService.acceptReq(Integer.parseInt(id));
+    public void updateStatusReq(@RequestParam String id,@RequestParam String act) {
+        employeeService.updateStatusReq(Integer.parseInt(id),act);
     }
 
 }
