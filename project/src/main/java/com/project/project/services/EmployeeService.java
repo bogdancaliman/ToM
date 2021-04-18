@@ -75,7 +75,8 @@ public class EmployeeService {
     }
 
     public List<WebEvent> loadHolidayReqByTl(Account tl) {
-        List<HolidayReq> lst = holidayReqRepository.findAllByAccountReq_TlAndStatus(tl, RequestStatus.sentTL);
+        List<HolidayReq> lst = holidayReqRepository.findAllByAccountReq_TlAndStatus(tl, RequestStatus.sentHR);
+        lst.addAll(holidayReqRepository.findAllByAccountReq_TlAndStatus(tl, RequestStatus.feedHR));
         List<WebEvent> result = new ArrayList<>();
         String color = "black";
         for (HolidayReq h : lst) {
@@ -97,6 +98,17 @@ public class EmployeeService {
             result.add(new WebEvent(h.getId(), h.getAccountReq().getEmployee().getName(), h.getStart(), h.getEnd(), color));
         }
         return result;
+    }
+
+    public List <HolidayReq> loadPendingReqByTl(Account tl) {
+        return holidayReqRepository.findAllByAccountReq_TlAndStatus(tl, RequestStatus.sentTL);
+    }
+
+    public void acceptReq(int id) {
+        HolidayReq req;
+        req = holidayReqRepository.findById(id);
+        req.setStatus(RequestStatus.sentHR);
+        holidayReqRepository.save(req);
     }
 
 }

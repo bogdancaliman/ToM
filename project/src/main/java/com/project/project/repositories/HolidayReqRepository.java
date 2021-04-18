@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface HolidayReqRepository extends CrudRepository<HolidayReq, Integer> {
     List<HolidayReq> findAllByAccountReq_TlAndStatus(Account tl, RequestStatus status);
+    HolidayReq findById(int id);
 }
