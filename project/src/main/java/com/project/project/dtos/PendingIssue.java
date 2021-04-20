@@ -3,7 +3,6 @@ package com.project.project.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import com.project.project.models.IssueReq;
 
 @Getter
 @Setter
@@ -11,9 +10,9 @@ import com.project.project.models.IssueReq;
 public class PendingIssue {
 
 
-    private int Id;
+    private int id;
     private String depName;
-    private String emplName;
+    private String name;
     private String description;
 
 

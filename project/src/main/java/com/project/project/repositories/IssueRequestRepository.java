@@ -2,9 +2,9 @@ package com.project.project.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import com.project.project.models.Department;
+import com.project.project.models.IssueRequest;
 
 @Repository
-public interface DepartmentRepository extends CrudRepository<Department, Integer> {
-   
+public interface IssueRequestRepository extends CrudRepository <IssueRequest, Integer> {
+  
 }

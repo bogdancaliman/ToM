@@ -7,6 +7,7 @@ import com.project.project.exceptions.SystemException;
 import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.models.Account;
 import com.project.project.repositories.AccountRepository;
+import java.util.Optional;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
@@ -14,24 +15,28 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service
-public class AuthService {
-    @Autowired
+public class LogInService {
+
     AccountRepository accountRepository;
 
-    public Account findAccountByUsername(String username) throws UserNotFoundException {
-        Account acc = accountRepository.findByUsername(username);
-        if (acc == null)
-            throw new UserNotFoundException();
+    @Autowired
+    public LogInService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
 
-        return acc;
+    public Account searchForUser(String username) throws UserNotFoundException {
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        if (!accountOptional.isPresent())
+            throw new UserNotFoundException();
+        return accountOptional.get();
     }
 
 
-    public void checkCredentials(Account acc, String password) throws SystemException, PasswordMatchException {
+    public void checkCredentials(Account account, String password) throws SystemException, PasswordMatchException {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            String aux = password + acc.getSalt();
-            if (!acc.getPassword().equals(DatatypeConverter.printHexBinary(md.digest(aux.getBytes(StandardCharsets.UTF_8)))))
+            String aux = password + account.getSalt();
+            if (!account.getPassword().equals(DatatypeConverter.printHexBinary(md.digest(aux.getBytes(StandardCharsets.UTF_8)))))
                 throw new PasswordMatchException();
         } catch (NoSuchAlgorithmException e) {
             throw new SystemException();

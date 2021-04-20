@@ -1,29 +1,30 @@
 package com.project.project.controllers;
 
-import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.project.project.dtos.WebEvent;
+import com.project.project.dtos.CalendarEvent;
 import com.project.project.models.Account;
 import com.project.project.services.EmployeeService;
-import com.project.project.models.HolidayReq;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @Controller
 public class EmployeeController {
 
+    private final EmployeeService employeeService;
+
     @Autowired
-    EmployeeService employeeService;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
 
     @GetMapping("/holidayReq")
@@ -35,7 +36,7 @@ public class EmployeeController {
             return mv;
         }
 
-        mv.addObject("delegates", employeeService.loadDelegates(((Account) request.getSession().getAttribute("active"))));
+        mv.addObject("delegates", employeeService.loadPossibleDelegates(((Account) request.getSession().getAttribute("active"))));
 
         return mv;
     }
@@ -50,7 +51,7 @@ public class EmployeeController {
             return mv;
         }
 
-        employeeService.addRequestRecord((Account) request.getSession().getAttribute("active"), params);
+        employeeService.addHolidayRequest((Account) request.getSession().getAttribute("active"), params);
         mv = new ModelAndView("redirect:/");
 
         return mv;
@@ -60,20 +61,20 @@ public class EmployeeController {
     @GetMapping("/pendingRequest")
     public ModelAndView pendingRequest(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("approveHolReq");
-        mv.addObject("pendingReq",employeeService.loadPendingReqByTl((Account) request.getSession().getAttribute("active")));
+        mv.addObject("pendingReq",employeeService.loadPendingHolidayRequestsForATeamLeader((Account) request.getSession().getAttribute("active")));
         return mv;
     }
 
     @GetMapping("/loadMyTeamsSchedule")
     @ResponseBody
-    public List<WebEvent> loadHolidayReq(HttpServletRequest request) {
-        return employeeService.loadHolidayReqByTl((Account) request.getSession().getAttribute("active"));
+    public List<CalendarEvent> loadHolidayReq(HttpServletRequest request) {
+        return employeeService.loadHolidayRequestsOfTeamLeaderForCalendar((Account) request.getSession().getAttribute("active"));
     }
 
     @PostMapping("/acceptReq")
     @ResponseBody
     public void updateStatusReq(@RequestParam String id,@RequestParam String act) {
-        employeeService.updateStatusReq(Integer.parseInt(id),act);
+        employeeService.updateStatusOfHolidayRequest(Integer.parseInt(id),act);
     }
 
 }
