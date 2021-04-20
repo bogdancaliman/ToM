@@ -9,10 +9,7 @@ import com.project.project.models.Account;
 import com.project.project.models.Employee;
 import com.project.project.models.IssueReq;
 import com.project.project.models.Department;
-import com.project.project.repositories.AccountRepository;
-import com.project.project.repositories.EmployeeRepository;
-import com.project.project.repositories.IssueReqRepository;
-import com.project.project.repositories.DepartmentRepository;
+import com.project.project.repositories.*;
 import javax.transaction.SystemException;
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +31,8 @@ public class ITService {
     private IssueReqRepository issueReqRepository;
     @Autowired
     private DepartmentRepository departmentRepository;
+    @Autowired
+    private HolidayReqRepository holidayReqRepository;
 
     public void reportIssueWithData(Map<String, String> params) {
 
@@ -105,7 +104,7 @@ public class ITService {
 
     }
     
-    public void deleteIssueReqByID (int id){
+    public void deleteIssueReqByID(int id){
         issueReqRepository.deleteById(id);
     }
 
@@ -115,12 +114,11 @@ public class ITService {
 
     public void removeDepartment(int id) {
 
-        String str="The following employees don't have a department: \n";
-        List<Employee> lst= employeeRepository.findAllByDepartment_Id(id);
-        for (Employee e:lst)
-        {
-            str+=e.getName();
-            str+="\n";
+        String str = "The following employees don't have a department: \n";
+        List<Employee> lst = employeeRepository.findAllByDepartment_Id(id);
+        for (Employee e : lst) {
+            str += e.getName();
+            str += "\n";
             e.setDepartment(null);
             employeeRepository.save(e);
         }
@@ -133,6 +131,14 @@ public class ITService {
     public void addDepartment(String name) {
 
         departmentRepository.save(new Department(name));
+
+    }
+
+    public void removeEmployee(int id) {
+        Account acc= employeeRepository.findById(id).getAccount();
+        employeeRepository.deleteById(id);
+        accountRepository.delete(acc);
+
 
     }
 } 
