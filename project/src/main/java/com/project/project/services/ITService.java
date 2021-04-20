@@ -8,9 +8,11 @@ import com.project.project.dtos.PendingIssue;
 import com.project.project.models.Account;
 import com.project.project.models.Employee;
 import com.project.project.models.IssueReq;
+import com.project.project.models.Department;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.EmployeeRepository;
 import com.project.project.repositories.IssueReqRepository;
+import com.project.project.repositories.DepartmentRepository;
 import javax.transaction.SystemException;
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +32,8 @@ public class ITService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private IssueReqRepository issueReqRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     public void reportIssueWithData(Map<String, String> params) {
 
@@ -101,8 +105,34 @@ public class ITService {
 
     }
     
-    public void deleteIssueReqByID (int id)
-    {
+    public void deleteIssueReqByID (int id){
         issueReqRepository.deleteById(id);
+    }
+
+    public Iterable<Department> loadDepartments() {
+        return departmentRepository.findAll();
+    }
+
+    public void removeDepartment(int id) {
+
+        String str="The following employees don't have a department: \n";
+        List<Employee> lst= employeeRepository.findAllByDepartment_Id(id);
+        for (Employee e:lst)
+        {
+            str+=e.getName();
+            str+="\n";
+            e.setDepartment(null);
+            employeeRepository.save(e);
+        }
+        issueReqRepository.save(new IssueReq(str,accountRepository.findById(-1)));
+        departmentRepository.deleteById(id);
+
+
+
+    }
+    public void addDepartment(String name) {
+
+        departmentRepository.save(new Department(name));
+
     }
 } 

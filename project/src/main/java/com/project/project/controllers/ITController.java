@@ -63,7 +63,7 @@ public class ITController {
     @GetMapping("/pendingIssue")
     public ModelAndView pendingIssue() {
 
-        ModelAndView mv= new ModelAndView("pendingIssue");
+        ModelAndView mv = new ModelAndView("pendingIssue");
         mv.addObject("ListPendingIssue", itService.loadAllPendingIssues());
         return mv;
     }
@@ -74,4 +74,24 @@ public class ITController {
         itService.deleteIssueReqByID(Integer.parseInt(id));
     }
     
+    @GetMapping("/manageDepartment")
+
+    public ModelAndView manageDepartment() {
+
+        ModelAndView mv = new ModelAndView("manageDepartment");
+        mv.addObject("departments", itService.loadDepartments());
+        return mv;
+    }
+
+    @PostMapping("/deleteDepartment")
+    public ModelAndView deleteDepartment(@RequestParam("departmentId") String id) {
+        itService.removeDepartment(Integer.parseInt(id));
+        return new ModelAndView("redirect:/manageDepartment");
+    }
+
+    @PostMapping("/addDepartment")
+    public ModelAndView addDepartment(@RequestParam("departmentName") String name) {
+        itService.addDepartment(name);
+        return new ModelAndView("redirect:/manageDepartment");
+    }
 } 
