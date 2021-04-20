@@ -57,14 +57,14 @@ public class PasswordController {
 
     @GetMapping("/set-new-password")
     public ModelAndView setNewPasswordGet(@ModelAttribute("userId") int id) {
-        ModelAndView mv = new ModelAndView("resetPassword");
+        ModelAndView mv = new ModelAndView("reset-password");
         mv.addObject("userId", id);
         return mv;
     }
 
     @PostMapping("/set-new-password")
     public ModelAndView setNewPasswordPost(@RequestParam Map<String, String> data, @ModelAttribute("userId") int id, RedirectAttributes ra) {
-        ModelAndView mv = new ModelAndView("resetPassword");
+        ModelAndView mv = new ModelAndView("reset-password");
         mv.addObject("userId", id);
         try {
             passwordService.validatePassword(data.get("password"), data.get("passwordVerification"));

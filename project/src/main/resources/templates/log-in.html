@@ -4,6 +4,7 @@
 		<title>Authenticate</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+		<link th:href="@{/css/font.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/images/favicon.png}" rel="icon" type="image/icon type" />
 	</head>
 	<body class="bg-dark h-100">
@@ -21,6 +22,7 @@
 								<img
 									class="d-block h-100 w-100"
 									th:src="@{/images/log-in-hero-shot-1.jpg}"
+									src=""
 									alt="First slide"
 								/>
 							</div>
@@ -28,6 +30,7 @@
 								<img
 									class="d-block h-100 w-100"
 									th:src="@{/images/log-in-hero-shot-2.jpg}"
+									src=""
 									alt="Second slide"
 								/>
 							</div>
@@ -35,6 +38,7 @@
 								<img
 									class="d-block h-100 w-100"
 									th:src="@{/images/log-in-hero-shot-3.jpg}"
+									src=""
 									alt="Third slide"
 								/>
 							</div>
@@ -51,16 +55,22 @@
 				</div>
 				<div class="col p-5">
 					<div
+						class="alert alert-warning my-3 d-none"
 						th:if='${upperNotification != ""}'
 						th:text="${upperNotification}"
-						class="alert alert-warning my-3 d-none"
 						role="alert"
 					></div>
-					<form id="log-in__auth-form" class="w-50 p-3 mx-auto mt-5" th:action="@{/log-in}" method="post">
+					<form
+						id="log-in__auth-form"
+						class="w-75 p-5 mx-auto mt-5 border border-info"
+						th:action="@{/log-in}"
+						method="post"
+					>
 						<div class="w-100 text-center">
-							<img th:src="@{images/favicon.png}" class="w-25 pb-2" alt="TOM" />
+							<img class="w-25 pb-2" th:src="@{images/favicon.png}" src="" alt="TOM" />
 						</div>
-						<h3 class="text-center text-light pb-5 pt-2">Log In</h3>
+						<hr class="border border-light" />
+						<h3 class="text-center text-light my-5">Log In</h3>
 						<div class="form-group">
 							<label for="log-in__auth-form__username" class="text-light">Username:</label><br />
 							<input
@@ -93,13 +103,14 @@
 					</form>
 					<form
 						id="log-in__reset-pass-form"
-						class="w-50 p-3 mx-auto mt-5 d-none"
+						class="w-75 p-5 mx-auto mt-5 border border-info d-none"
 						th:action="@{/reset-password}"
 						method="post"
 					>
 						<div class="w-100 text-center">
-							<img th:src="@{images/favicon.png}" class="w-25 pb-2" alt="TOM" />
+							<img class="w-25 pb-2" th:src="@{images/favicon.png}" src="" alt="TOM" />
 						</div>
+						<hr class="border border-light" />
 						<h3 class="text-center text-light pb-5 pt-2">Reset Password</h3>
 						<div class="form-group">
 							<label for="log-in__reset-pass-form__username" class="text-white">Username:</label><br />
@@ -123,6 +134,7 @@
 		</div>
 		<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
 		<script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.min.js}"></script>
+		<script th:src="@{js/alert-handler.js}"></script>
 		<script th:src="@{js/log-in.js}"></script>
 	</body>
 </html>
