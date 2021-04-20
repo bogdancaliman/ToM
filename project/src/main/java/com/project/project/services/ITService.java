@@ -138,7 +138,11 @@ public class ITService {
         Account acc= employeeRepository.findById(id).getAccount();
         employeeRepository.deleteById(id);
         accountRepository.delete(acc);
+    }
 
-
+    public void updateTeamLeader(int id, int id2) {
+        Account acc = employeeRepository.findById(id).getAccount();
+        acc.setTl(employeeRepository.findById(id2).getAccount());
+        accountRepository.save(acc);
     }
 } 
