@@ -68,7 +68,6 @@
 								name="username"
 								id="log-in__auth-form__username"
 								class="form-control"
-								th:value="${user}"
 								required
 							/>
 						</div>
@@ -85,12 +84,9 @@
 						<div id="log-in__auth-form__reset-link" class="text-right my-3">
 							<a href="#" class="text-info">Forgot your password?</a>
 						</div>
-						<div
-							th:if='${error != ""}'
-							th:text="${error}"
-							class="alert alert-danger mt-2 d-none"
-							role="alert"
-						></div>
+						<div th:if="${param.error}" class="alert alert-danger mt-2 d-none" role="alert">
+							Bad credentials!
+						</div>
 						<div class="form-group mt-3">
 							<input type="submit" name="submit" class="btn btn-info btn-md" value="submit" />
 						</div>
@@ -112,7 +108,6 @@
 								name="username"
 								id="log-in__reset-pass-form__username"
 								class="form-control"
-								th:value="${user}"
 								required
 							/>
 						</div>
