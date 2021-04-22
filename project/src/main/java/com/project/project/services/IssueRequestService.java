@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.project.project.dtos.PendingIssue;
 import com.project.project.models.Account;
 import com.project.project.models.IssueRequest;
+import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.IssueRequestRepository;
 
@@ -26,9 +27,13 @@ public class IssueRequestService {
         this.issueRequestRepository = issueRequestRepository;
     }
 
-    public void addIssueRequest(Map<String, String> params) {
-        Optional<Account> accountOptional = accountRepository.findById(Integer.parseInt(params.get("myId")));
-        accountOptional.ifPresent(account -> issueRequestRepository.save(new IssueRequest(params.get("description"), account)));
+    public void addIssueRequest(String username, Map<String, String> params) throws UserNotFoundException {
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        if(accountOptional.isPresent()) {
+            issueRequestRepository.save(new IssueRequest(params.get("description"), accountOptional.get()));
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     public List<PendingIssue> loadAllPendingIssueRequests() {

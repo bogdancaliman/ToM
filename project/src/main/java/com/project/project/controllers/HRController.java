@@ -11,8 +11,6 @@ import com.project.project.exceptions.UsedEmailException;
 import com.project.project.exceptions.SignUpException;
 import com.project.project.services.HRService;
 import com.project.project.services.DepartmentService;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,7 +28,7 @@ public class HRController {
     }
 
     @GetMapping("/sign-up")
-    public ModelAndView signUpGet() {
+    public ModelAndView signUp() {
         ModelAndView mv = new ModelAndView("sign-up");
         mv.addObject("departments", departmentService.loadDepartments());
             mv.addObject("error", "");
@@ -38,7 +36,7 @@ public class HRController {
         }
     
         @PostMapping("/sign-up")
-        public ModelAndView signUpPost(@RequestParam Map<String, String> params, HttpServletRequest request, RedirectAttributes ra) {
+        public ModelAndView signUp(@RequestParam Map<String, String> params, RedirectAttributes ra) {
             ModelAndView mv = new ModelAndView("sign-up");
         try {
             hrService.checkIfEmailIsAvailable(params);
@@ -50,8 +48,7 @@ public class HRController {
             mv.addObject("error", "The email is already used!");
         } catch (SignUpException e) {
             mv.addObject("departments", departmentService.loadDepartments());
-            mv.addObject("error", "An error has occured!");
-        }
+            mv.addObject("error", "An error has occurred!");
         return mv;
 
     }

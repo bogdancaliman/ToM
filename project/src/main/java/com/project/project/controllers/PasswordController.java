@@ -7,7 +7,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import com.project.project.exceptions.*;
-import com.project.project.models.Account;
 import com.project.project.services.PasswordService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ public class PasswordController {
     }
 
     @PostMapping("/resetPassword")
-    public RedirectView resetPasswordPost(@RequestParam("username") String username, HttpServletRequest request, RedirectAttributes ra) {
+    public RedirectView resetPassword(@RequestParam("username") String username, HttpServletRequest request, RedirectAttributes ra) {
         RedirectView rv = new RedirectView("/log-in");
         ra.addFlashAttribute("upperNotification", "Check your email address!");
         try {
@@ -41,7 +40,7 @@ public class PasswordController {
 
 
     @GetMapping("/validate-password-reset-request")
-    public RedirectView validatePasswordResetRequestGet(@RequestParam("token") String token, RedirectAttributes ra) {
+    public RedirectView validatePasswordResetRequest(@RequestParam("token") String token, RedirectAttributes ra) {
         RedirectView rv;
         try {
             rv = new RedirectView("/set-new-password");
@@ -55,14 +54,14 @@ public class PasswordController {
     }
 
     @GetMapping("/set-new-password")
-    public ModelAndView setNewPasswordGet(@ModelAttribute("userId") int id) {
+    public ModelAndView setNewPassword(@ModelAttribute("userId") int id) {
         ModelAndView mv = new ModelAndView("reset-password");
         mv.addObject("userId", id);
         return mv;
     }
 
     @PostMapping("/set-new-password")
-    public ModelAndView setNewPasswordPost(@RequestParam Map<String, String> data, @ModelAttribute("userId") int id, RedirectAttributes ra) {
+    public ModelAndView setNewPassword(@RequestParam Map<String, String> data, @ModelAttribute("userId") int id, RedirectAttributes ra) {
         ModelAndView mv = new ModelAndView("reset-password");
         mv.addObject("userId", id);
         try {
