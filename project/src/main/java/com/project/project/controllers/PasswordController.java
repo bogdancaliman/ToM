@@ -25,19 +25,19 @@ public class PasswordController {
     }
 
     @PostMapping("/resetPassword")
-    public ModelAndView resetPassword(@RequestParam("username") String username, HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView("log-in");
-        mv.addObject("upperNotification", "Check your email address!");
+    public RedirectView resetPasswordPost(@RequestParam("username") String username, HttpServletRequest request, RedirectAttributes ra) {
+        RedirectView rv = new RedirectView("/log-in");
+        ra.addFlashAttribute("upperNotification", "Check your email address!");
         try {
             Account acc = passwordService.searchForUser(username);
             String hostLink = request.getScheme() + "://" + request.getServerName()+":8181";
             passwordService.addResetRequest(acc, hostLink);
         } catch (UserNotFoundException e) {
-            mv.addObject("upperNotification", "User not found!");
+            ra.addFlashAttribute("upperNotification", "User not found!");
         } catch (SystemException e) {
-            mv.addObject("upperNotification", "There was a problem in sending the reset email!");
+            ra.addFlashAttribute("upperNotification", "There was a problem in sending the reset email!");
         }
-        return mv;
+        return rv;
     }
 
 
@@ -49,7 +49,7 @@ public class PasswordController {
             int id = passwordService.identifyAccount(token);
             ra.addFlashAttribute("userId", id);
         } catch (InvalidTokenException e) {
-            rv = new RedirectView("/");
+            rv = new RedirectView("/log-in");
             ra.addFlashAttribute("upperNotification", "The token expired or is invalid!");
         }
         return rv;
@@ -69,14 +69,14 @@ public class PasswordController {
         try {
             passwordService.validatePassword(data.get("password"), data.get("passwordVerification"));
             passwordService.updateAccountPasswordById(Integer.parseInt(data.get("userId")), data.get("password"));
-            mv = new ModelAndView("redirect:/");
+            mv = new ModelAndView("redirect:/log-in");
             ra.addFlashAttribute("upperNotification", "Password updated!");
             return mv;
         } catch (WeakPasswordException e) {
             mv.addObject("error", "The password is too weak!");
         } catch (PasswordVerificationException e) {
             mv.addObject("error", "The password does not match!");
-        } catch (SignUpException | SystemException e) {
+        } catch (SignUpException e) {
             mv.addObject("error", "We're having some system issues! Try again later!");
         }
         return mv;
