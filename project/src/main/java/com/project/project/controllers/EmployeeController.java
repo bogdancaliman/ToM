@@ -31,7 +31,7 @@ public class EmployeeController {
     public ModelAndView holidayReq(HttpServletRequest request, RedirectAttributes ra) {
         ModelAndView mv = new ModelAndView("holidayReq");
         if (request.getSession().getAttribute("active") == null) {
-            mv = new ModelAndView("redirect:/auth");
+            mv = new ModelAndView("redirect:/log-in");
             ra.addFlashAttribute("upperNotification", "Please log in again (Session expired)!");
             return mv;
         }
@@ -46,7 +46,7 @@ public class EmployeeController {
 
         ModelAndView mv;
         if (request.getSession().getAttribute("active") == null) {
-            mv = new ModelAndView("redirect:/auth");
+            mv = new ModelAndView("redirect:/log-in");
             ra.addFlashAttribute("upperNotification", "Please log in again (Session expired)!");
             return mv;
         }
