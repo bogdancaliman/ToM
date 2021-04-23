@@ -1,8 +1,6 @@
 package com.project.project.controllers;
 
-import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +9,7 @@ import com.project.project.exceptions.UsedEmailException;
 import com.project.project.exceptions.SignUpException;
 import com.project.project.services.HRService;
 import com.project.project.services.DepartmentService;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class HRController {

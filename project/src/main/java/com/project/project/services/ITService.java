@@ -12,10 +12,6 @@ import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.EmployeeRepository;
 import com.project.project.repositories.IssueRequestRepository;
 import javax.transaction.SystemException;
-import javax.xml.bind.DatatypeConverter;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service
