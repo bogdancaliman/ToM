@@ -61,9 +61,8 @@ public class ITController {
         issueRequestService.deleteIssueRequestById(Integer.parseInt(issueId));
     }
     
-    @GetMapping("/manage-departments")
+    @GetMapping("/manage-department")
     public ModelAndView manageDepartment() {
-
         ModelAndView mv = new ModelAndView("manage-department");
         mv.addObject("departments", departmentService.loadDepartments());
         return mv;
