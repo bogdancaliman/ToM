@@ -173,4 +173,9 @@ public class EmployeeService {
         }
     }
 
+    public Employee findEmployeeByUsername(String username) {
+        Optional<Employee> employeeOptional = employeeRepository.findByAccount_Username(username);
+        return employeeOptional.orElse(null);
+    }
+
 }

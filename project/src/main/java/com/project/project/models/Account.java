@@ -36,7 +36,7 @@ public class Account implements Serializable {
 
     @EqualsAndHashCode.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "delegate", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "delegate", cascade = CascadeType.ALL)
     private Set<HolidayRequest> delegatedHolidayRequests = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
@@ -50,7 +50,7 @@ public class Account implements Serializable {
     private Set<Account> members = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "FK_teamLeader")
+    @JoinColumn(name = "FK_team_leader")
     private Account teamLeader;
 
     @OneToOne

@@ -35,9 +35,9 @@ public class HRController {
             return mv;
         }
     
-        @PostMapping("/sign-up")
-        public ModelAndView signUp(@RequestParam Map<String, String> params, RedirectAttributes ra) {
-            ModelAndView mv = new ModelAndView("sign-up");
+    @PostMapping("/sign-up")
+    public ModelAndView signUp(@RequestParam Map<String, String> params, RedirectAttributes ra) {
+        ModelAndView mv = new ModelAndView("sign-up");
         try {
             hrService.checkIfEmailIsAvailable(params);
             mv = new ModelAndView("redirect:/create-account");
@@ -49,9 +49,10 @@ public class HRController {
         } catch (SignUpException e) {
             mv.addObject("departments", departmentService.loadDepartments());
             mv.addObject("error", "An error has occurred!");
+        }
         return mv;
-
-    }
+         
+        }
     @GetMapping("/update-sign-up-form")
     @ResponseBody
     public List<Pair<Integer, String>> getEmployeesOfDepartment(@RequestParam("departmentId") int departmentId) {
