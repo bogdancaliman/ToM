@@ -178,4 +178,8 @@ public class EmployeeService {
         return employeeOptional.orElse(null);
     }
 
+    public boolean isTeamLeader(String username) {
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        return accountOptional.filter(account -> !accountRepository.findAllByTeamLeader(account).isEmpty()).isPresent();
+    }
 }
