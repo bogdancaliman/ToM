@@ -25,10 +25,10 @@ public class PasswordController {
 
     @PostMapping("/resetPassword")
     public RedirectView resetPassword(@RequestParam("username") String username, HttpServletRequest request, RedirectAttributes ra) {
-        RedirectView rv = new RedirectView("/log-in");
+        RedirectView rv = new RedirectView("/tom/log-in");
         ra.addFlashAttribute("upperNotification", "Check your email address!");
         try {
-            String hostLink = request.getScheme() + "://" + request.getServerName()+":8181";
+            String hostLink = request.getScheme() + "://" + request.getServerName()+":8181/tom";
             passwordService.addResetRequest(username, hostLink);
         } catch (UserNotFoundException e) {
             ra.addFlashAttribute("upperNotification", "User not found!");
@@ -43,11 +43,11 @@ public class PasswordController {
     public RedirectView validatePasswordResetRequest(@RequestParam("token") String token, RedirectAttributes ra) {
         RedirectView rv;
         try {
-            rv = new RedirectView("/set-new-password");
+            rv = new RedirectView("/tom/set-new-password");
             int id = passwordService.identifyAccountUsingToken(token);
             ra.addFlashAttribute("userId", id);
         } catch (InvalidTokenException e) {
-            rv = new RedirectView("/log-in");
+            rv = new RedirectView("/tom/log-in");
             ra.addFlashAttribute("upperNotification", "The token expired or is invalid!");
         }
         return rv;
