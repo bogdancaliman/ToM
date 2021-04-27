@@ -2,6 +2,7 @@ package com.project.project.controllers;
 
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -53,12 +54,6 @@ public class ITController {
         ModelAndView mv = new ModelAndView("pending-issues");
         mv.addObject("pendingIssues", issueRequestService.loadAllPendingIssueRequests());
         return mv;
-    }
-
-    @PostMapping("/delete-issue")
-    @ResponseBody
-    public void deleteIssue(@RequestParam("issueId") String issueId) {
-        issueRequestService.deleteIssueRequestById(Integer.parseInt(issueId));
     }
     
     @GetMapping("/manage-department")
@@ -119,4 +114,9 @@ public class ITController {
         return departmentService.loadEmployeesOfDepartmentById(departmentId).stream().map(s -> new Pair<>(s.getId(), s.getName())).collect(Collectors.toList());
     }
 
+    @PostMapping("/delete-issue")
+    @ResponseBody
+    public void deleteIssue(@RequestParam("issueId") String issueId) {
+        issueRequestService.deleteIssueRequestById(Integer.parseInt(issueId));
+    }
 } 

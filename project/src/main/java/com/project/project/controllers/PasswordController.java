@@ -1,15 +1,24 @@
 package com.project.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import com.project.project.dtos.TOMUserDetails;
 import com.project.project.exceptions.*;
 import com.project.project.services.PasswordService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -61,9 +70,16 @@ public class PasswordController {
     }
 
     @PostMapping("/set-new-password")
-    public ModelAndView setNewPassword(@RequestParam Map<String, String> data, @ModelAttribute("userId") int id, RedirectAttributes ra) {
+    public ModelAndView setNewPassword(@RequestParam Map<String, String> data, @ModelAttribute("userId") int id, RedirectAttributes ra, Authentication authentication) {
         ModelAndView mv = new ModelAndView("reset-password");
         mv.addObject("userId", id);
+        if(!((TOMUserDetails)authentication.getPrincipal()).isActivated()) {
+            List<GrantedAuthority> updatedAuthorities = new ArrayList<>(authentication.getAuthorities());
+            updatedAuthorities.add(new SimpleGrantedAuthority("ACTIVATED"));
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), updatedAuthorities);
+            passwordService.activateMyAccount(authentication.getName());
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
         try {
             passwordService.validatePassword(data.get("password"), data.get("passwordVerification"));
             passwordService.updateAccountPasswordById(Integer.parseInt(data.get("userId")), data.get("password"));

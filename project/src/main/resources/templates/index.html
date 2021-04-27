@@ -13,10 +13,14 @@
 		<link th:href="@{/css/font.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/scrollbar.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/background.css}" rel="stylesheet" type="text/css" />
+		<link th:href="@{/css/button.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/index.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/images/favicon.png}" rel="icon" type="image/icon type" />
 	</head>
 	<body class="bg-dark h-100">
+		<a th:href="@{/log-out}" class="btn btn-danger btn-default btn-circle btn-lg m-5 text-light position-fixed"
+			><i class="fa fa-power-off"></i
+		></a>
 		<div class="container h-100">
 			<div class="row h-25 align-items-center index__alert">
 				<div class="col-4 mx-auto align-items-center">
@@ -64,13 +68,13 @@
 						type="button"
 						class="btn btn-info btn-default btn-circle btn-xl index__menu-toggler"
 						data-toggle="collapse"
-						data-target="#multiCollapseExample2"
-						aria-controls="multiCollapseExample2"
+						data-target="#index__menu"
+						aria-controls="index__menu"
 						aria-expanded="false"
 					>
 						<i class="fa fa-chevron-down" aria-hidden="true"></i>
 					</button>
-					<div class="collapse multi-collapse index__menu w-75 mx-auto text-left" id="multiCollapseExample2">
+					<div class="collapse multi-collapse index__menu w-75 mx-auto text-left" id="index__menu">
 						<div class="list-group">
 							<a th:href="@{/request-holiday}" class="list-group-item">Request a holiday</a>
 							<a th:href="@{/not-mapped-yet}" class="list-group-item">My requests status</a>
@@ -91,7 +95,7 @@
 							>
 							<a
 								sec:authorize="hasAnyAuthority('HR', 'ADMIN')"
-								th:href="@{/pending-holiday-requests-hr}"
+								th:href="@{/company-schedule}"
 								class="list-group-item"
 								>Whole company schedule</a
 							>
