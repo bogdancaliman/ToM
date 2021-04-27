@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html class="h-100" xmlns:th="http://www.thymeleaf.org" lang="en">
 	<head>
 		<title>Registration</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/font.css}" rel="stylesheet" type="text/css" />
-		<link th:href="@{/css/scrollbar.css}" rel="stylesheet" type="text/css"/>
-		<link th:href="@{/css/form-select.css}" rel="stylesheet" type="text/css"/>
+		<link th:href="@{/css/scrollbar.css}" rel="stylesheet" type="text/css" />
+		<link th:href="@{/css/background.css}" rel="stylesheet" type="text/css" />
+		<link th:href="@{/css/form-select.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/images/favicon.png}" rel="icon" type="image/icon type" />
 	</head>
 	<body class="bg-dark">
@@ -24,7 +25,9 @@
 								<hr class="border border-light" />
 								<h3 class="text-center text-light py-3"><b>Sign Up</b></h3>
 								<div class="form-group w-75 mx-auto my-2">
-									<label for="sign-up__form__name-field" class="text-light">Name: (Last name First name)</label><br>
+									<label for="sign-up__form__name-field" class="text-light"
+										>Name: (Last name First name)</label
+									><br />
 									<input
 										type="text"
 										name="name"
