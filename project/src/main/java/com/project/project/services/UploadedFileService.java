@@ -9,7 +9,6 @@ import com.project.project.models.UploadedFile;
 import com.project.project.repositories.HolidayRequestRepository;
 import com.project.project.repositories.UploadedFileRepository;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class UploadedFileService {
         }
     }
 
-    public UploadedFile getFileByRequest(String requestId) {
+    public UploadedFile getFileByRequestId(String requestId) {
         Optional<HolidayRequest> holidayRequestOptional = holidayRequestRepository.findById(requestId);
         return holidayRequestOptional.map(HolidayRequest::getUploadedFile).orElse(null);
     }

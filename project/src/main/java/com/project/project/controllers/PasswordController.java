@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import com.project.project.exceptions.*;
+import com.project.project.services.ActivationService;
 import com.project.project.services.PasswordService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,11 +27,12 @@ import java.util.Map;
 public class PasswordController {
 
     private final PasswordService passwordService;
-
+    private final ActivationService activationService;
 
     @Autowired
-    public PasswordController(PasswordService passwordService) {
+    public PasswordController(PasswordService passwordService, ActivationService activationService) {
         this.passwordService = passwordService;
+        this.activationService = activationService;
     }
 
     @PostMapping("/resetPassword")
@@ -78,8 +80,8 @@ public class PasswordController {
             Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), updatedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(newAuth);
         }
-        if (!passwordService.isUserActivated(id))
-            passwordService.activateMyAccount(id);
+        if (!activationService.isUserActivated(id))
+            activationService.activateMyAccount(id);
 
         try {
             passwordService.validatePassword(data.get("password"), data.get("passwordVerification"));

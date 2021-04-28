@@ -26,7 +26,7 @@
 				<div class="col-4 mx-auto align-items-center">
 					<div
 						class="alert alert-warning my-3 d-none"
-						th:if='${upperNotification != ""}'
+						th:if="${upperNotification != null}"
 						th:text="${upperNotification}"
 						role="alert"
 					></div>
@@ -60,7 +60,8 @@
 										<li>Phone: <span th:text="${employee.getTel()}"></span></li>
 										<li>Address: <span th:text="${employee.getAddress()}"></span></li>
 										<li>
-											Days left: <span th:text="${employee.getAccount().getRemainingDays()}"></span>
+											Days left:
+											<span th:text="${employee.getAccount().getRemainingDays()}"></span>
 										</li>
 									</ul>
 								</div>
@@ -81,7 +82,7 @@
 						<div class="list-group">
 							<a th:href="@{/request-holiday}" class="list-group-item">Request a holiday</a>
 							<a th:href="@{/not-mapped-yet}" class="list-group-item">My requests status</a>
-							<a th:if="${iAmTeamLeader}" th:href="@{/pending-holiday-requests}" class="list-group-item"
+							<a th:if="${isTeamLeader}" th:href="@{/pending-holiday-requests}" class="list-group-item"
 								>My team schedule</a
 							>
 							<a
@@ -108,11 +109,15 @@
 								class="list-group-item"
 								>Pending issue requests</a
 							>
-							<a sec:authorize="hasAuthority('ADMIN') and hasAuthority('IT')" th:href="@{/manage-department}"
+							<a
+								sec:authorize="hasAuthority('ADMIN') and hasAuthority('IT')"
+								th:href="@{/manage-department}"
 								class="list-group-item"
 								>Manage departments</a
 							>
-							<a sec:authorize="hasAuthority('ADMIN') and hasAuthority('IT')" th:href="@{/delete-employee}"
+							<a
+								sec:authorize="hasAuthority('ADMIN') and hasAuthority('IT')"
+								th:href="@{/delete-employee}"
 								class="list-group-item"
 								>Manage employee</a
 							>

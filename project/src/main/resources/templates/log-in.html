@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/font.css}" rel="stylesheet" type="text/css" />
-		<link th:href="@{/css/scrollbar.css}" rel="stylesheet" type="text/css"/>
+		<link th:href="@{/css/scrollbar.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/images/favicon.png}" rel="icon" type="image/icon type" />
 	</head>
 	<body class="bg-dark h-100">
@@ -63,7 +63,7 @@
 					>
 						<div
 							class="alert alert-warning my-3 d-none"
-							th:if='${upperNotification != ""}'
+							th:if="${upperNotification != null}"
 							th:text="${upperNotification}"
 							role="alert"
 						></div>
@@ -144,7 +144,6 @@
 		</div>
 		<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
 		<script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.min.js}"></script>
-		<script th:src="@{js/alert-handler.js}"></script>
 		<script th:src="@{js/log-in.js}"></script>
 	</body>
 </html>

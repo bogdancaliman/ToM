@@ -1,39 +1,34 @@
 package com.project.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.project.project.dtos.CalendarEvent;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.project.project.exceptions.UsedEmailException;
 import com.project.project.exceptions.SignUpException;
 import com.project.project.services.HRService;
-import com.project.project.exceptions.UserNotFoundException;
-import com.project.project.services.DepartmentService;
-import java.util.List;
+import com.project.project.services.FormService;
 import java.util.Map;
 
 @Controller
 public class HRController {
 
     private final HRService hrService;
-    private final DepartmentService departmentService;
+    private final FormService formService;
 
     @Autowired
-    public HRController(HRService hrService, DepartmentService departmentService) {
+    public HRController(HRService hrService, FormService formService) {
         this.hrService = hrService;
-        this.departmentService = departmentService;
+        this.formService = formService;
     }
 
     @GetMapping("/sign-up")
     public ModelAndView signUp() {
         ModelAndView mv = new ModelAndView("sign-up");
-        mv.addObject("departments", departmentService.loadDepartments());
-            mv.addObject("error", "");
-            return mv;
-        }
+        mv.addObject("departments", formService.loadDepartments());
+        mv.addObject("error", null)
+        return mv;
+    }
     
     @PostMapping("/sign-up")
     public ModelAndView signUp(@RequestParam Map<String, String> params, RedirectAttributes ra) {
@@ -44,7 +39,7 @@ public class HRController {
             ra.addFlashAttribute("employeeId", hrService.addEmployee(params));
             ra.addFlashAttribute("teamLeaderId", params.get("teamLeaderId"));
         } catch (SignUpException e) {
-            mv.addObject("departments", departmentService.loadDepartments());
+            mv.addObject("departments", formService.loadDepartments());
             mv.addObject("error", e.getMessage());
         }
         return mv;
@@ -54,7 +49,7 @@ public class HRController {
     @GetMapping("/company-schedule")
     public ModelAndView companySchedule() {
         ModelAndView mv = new ModelAndView("company-schedule");
-        mv.addObject("departments", departmentService.loadDepartments());
+        mv.addObject("departments", formService.loadDepartments());
         return mv;
     }
 

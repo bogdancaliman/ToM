@@ -9,7 +9,7 @@
 		<link th:href="@{/webjars/fullcalendar/4.3.1/daygrid/main.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/font.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/scrollbar.css}" rel="stylesheet" type="text/css" />
-		<link th:href="@{/css/pending-holiday-requests.css}" rel="stylesheet" type="text/css" />
+		<link th:href="@{/css/calendar.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/background.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/css/button.css}" rel="stylesheet" type="text/css" />
 		<link th:href="@{/images/favicon.png}" rel="icon" type="image/icon type" />
@@ -72,8 +72,12 @@
 									></h5>
 								</div>
 								<div class="col m-0 text-center">
-									<h5 class="text-light" th:if="${i.getDelegate()!=null}" th:text="${i.getDelegate().getEmployee().getName()}"></h5>
-                            		<h5 class="text-light" th:if="${i.getDelegate()==null}">Not necessary</h5>
+									<h5
+										class="text-light"
+										th:if="${i.getDelegate()!=null}"
+										th:text="${i.getDelegate().getEmployee().getName()}"
+									></h5>
+									<h5 class="text-light" th:if="${i.getDelegate()==null}">Not necessary</h5>
 								</div>
 							</div>
 						</div>
@@ -109,11 +113,19 @@
 							<p
 								th:text="'Period: ' + ${i.getStart().getDay()} + '.' + ${i.getStart().getMonth()} + '.' + ${i.getStart().getYear()+1900} + ' - ' + ${i.getEnd().getDay()} + '.' + ${i.getEnd().getMonth()} + '.' + ${i.getEnd().getYear()+1900}"
 							></p>
-							<p th:if="${i.getDelegate()!=null}" th:text="'Delegate: ' + ${i.getDelegate().getEmployee().getName()}"></p>
-                   			 <p th:if="${i.getDelegate()==null}">Not necessary</p>
-                		</div>
-                		<div th:if="${i.getType() == 0}">
-                   			 <a th:href="@{/download-file(holidayRequestId=${i.getId()})}" th:id="'file'+${i.getId()}" class="file-link">Download file!</a>
+							<p
+								th:if="${i.getDelegate()!=null}"
+								th:text="'Delegate: ' + ${i.getDelegate().getEmployee().getName()}"
+							></p>
+							<p th:if="${i.getDelegate()==null}">Not necessary</p>
+						</div>
+						<div th:if="${i.getType() == 0}">
+							<a
+								th:href="@{/download-file(holidayRequestId=${i.getId()})}"
+								th:id="'file'+${i.getId()}"
+								class="file-link"
+								>Download file!</a
+							>
 						</div>
 					</div>
 					<div class="modal-footer">
