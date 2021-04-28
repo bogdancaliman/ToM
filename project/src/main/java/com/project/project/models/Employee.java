@@ -1,6 +1,7 @@
 package com.project.project.models;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Date;
@@ -13,9 +14,12 @@ import java.io.Serializable;
 @Entity(name = "Employee")
 @Table(name = "employee")
 public class Employee implements Serializable {
+    private static final long serialVersionUID = 6529685098267757690L;
+
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     private String name;
     private String address;

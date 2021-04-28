@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.project.project.models.IssueRequest;
 
 @Repository
-public interface IssueRequestRepository extends CrudRepository <IssueRequest, Integer> {
+public interface IssueRequestRepository extends CrudRepository <IssueRequest, String> {
   
 }

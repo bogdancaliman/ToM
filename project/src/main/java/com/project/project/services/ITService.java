@@ -32,10 +32,10 @@ public class ITService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void generateAccount(int employeeId, int teamLeaderId) throws SystemException {
+    public void generateAccount(String employeeId, String teamLeaderId) throws SystemException {
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
         Optional<Account> teamLeaderOptional = accountRepository.findByEmployee_Id(teamLeaderId);
-        if (!employeeOptional.isPresent() || !teamLeaderOptional.isPresent())
+        if (!employeeOptional.isPresent())
             throw new SystemException();
 
         String username;
@@ -69,17 +69,22 @@ public class ITService {
             } while (accountRepository.findByUsername(username).isPresent());
 
         }
-        Account acc = new Account(username, hashedPassword, salt, employeeOptional.get(), teamLeaderOptional.get());
+        Account acc;
+        if(teamLeaderOptional.isPresent())
+            acc = new Account(username, hashedPassword, salt, employeeOptional.get(), teamLeaderOptional.get(), 21);
+        else
+            acc = new Account(username, hashedPassword, salt, employeeOptional.get(), null, 30);
+
         CredentialsEmail data = new CredentialsEmail(acc, "Account data", username, passwordToSend);
         try {
             emailService.sendEmail(data);
             accountRepository.save(acc);
         } catch (MailException | NullPointerException e) {
-            throw new SystemException();
+            throw new SystemException("There was an error in the system! Try again later!");
         }
     }
 
-    public void informItAboutSystemError(int employeeId) {
+    public void informItAboutSystemError(String employeeId) {
         issueRequestRepository.save(new IssueRequest("The user with id: " + employeeId + "doesn't have an account due to some system problems!", null));
     }
 } 

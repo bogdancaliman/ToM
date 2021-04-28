@@ -8,7 +8,7 @@ import com.project.project.dtos.RequestStatus;
 import java.util.List;
 
 @Repository
-public interface HolidayRequestRepository extends CrudRepository<HolidayRequest, Integer> {
+public interface HolidayRequestRepository extends CrudRepository<HolidayRequest, String> {
     List<HolidayRequest> findAllByRequester_TeamLeaderAndStatus(Account teamLeader, RequestStatus status);
     List<HolidayRequest> findAllByRequesterAndStatus(Account account, RequestStatus status);
 }

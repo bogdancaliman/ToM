@@ -1,9 +1,11 @@
 package com.project.project.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import com.project.project.dtos.RequestStatus;
 import com.project.project.dtos.RequestType;
 
@@ -18,9 +20,11 @@ import java.io.Serializable;
 @Entity(name = "HolidayRequest")
 @Table(name = "holiday_request")
 public class HolidayRequest implements Serializable {
+    private static final long serialVersionUID = 6529685098267757690L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     @Enumerated(EnumType.ORDINAL)
     private RequestType type;
@@ -29,9 +33,13 @@ public class HolidayRequest implements Serializable {
     private RequestStatus status;
 
     private String description;
-
     private Date start;
     private Date end;
+
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UploadedFile uploadedFile;
 
     @ManyToOne
     @JoinColumn(name = "FK_requester")

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import com.project.project.dtos.TOMUserDetails;
 import com.project.project.services.ClearDataService;
 import com.project.project.services.EmployeeService;
 import com.project.project.services.PasswordService;

@@ -1,9 +1,10 @@
 package com.project.project.models;
 
 import lombok.*;
-
+import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Date;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -11,10 +12,12 @@ import java.util.Date;
 @EqualsAndHashCode
 @Entity(name = "ResetPassReq")
 @Table(name = "reset_password_request")
-public class ResetPasswordRequest {
+public class ResetPasswordRequest implements Serializable {
+    private static final long serialVersionUID = 6529685098267757690L;
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "FK_account")

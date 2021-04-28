@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Repository
-public interface ResetPasswordRequestRepository extends CrudRepository<ResetPasswordRequest, Integer> {
+public interface ResetPasswordRequestRepository extends CrudRepository<ResetPasswordRequest, String> {
     Optional<ResetPasswordRequest> findByToken(String token);
     @Transactional
     void deleteAllByAccount(Account account);

@@ -1,7 +1,7 @@
 package com.project.project.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.project.models.ResetPasswordRequest;
+import org.hibernate.annotations.GenericGenerator;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,15 +15,18 @@ import java.io.Serializable;
 @Entity(name = "Account")
 @Table(name = "account")
 public class Account implements Serializable {
+    private static final long serialVersionUID = 6529685098267757690L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     private String username;
     private String password;
     private String salt;
-    private boolean activated = false;
+    private boolean activated;
+    private int remainingDays;
 
     @EqualsAndHashCode.Exclude
     @JsonIgnore
@@ -58,11 +61,13 @@ public class Account implements Serializable {
     @JoinColumn(name = "FK_employee")
     private Employee employee;
 
-    public Account(String username, String password, String salt, Employee employee, Account teamLeader) {
+    public Account(String username, String password, String salt, Employee employee, Account teamLeader, int remainingDays) {
         this.username = username;
         this.password = password;
         this.salt = salt;
         this.employee = employee;
         this.teamLeader = teamLeader;
+        this.activated = false;
+        this.remainingDays = remainingDays;
     }
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
 public class PendingIssue {
 
 
-    private int id;
+    private String id;
     private String departmentName;
     private String name;
     private String description;
