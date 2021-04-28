@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import com.project.project.dtos.CalendarEvent;
 import com.project.project.exceptions.FileStorageException;
+import com.project.project.exceptions.NotEnoughDaysException;
 import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.models.UploadedFile;
 import com.project.project.services.IssueRequestService;
@@ -45,6 +46,7 @@ public class EmployeeController {
     @GetMapping("/request-holiday")
     public ModelAndView requestHoliday(Authentication authentication) {
         ModelAndView mv = new ModelAndView("request-holiday");
+        mv.addObject("error", "");
         try {
             mv.addObject("delegates", employeeService.loadPossibleDelegates(authentication.getName()));
         } catch (UserNotFoundException e) {
@@ -54,15 +56,18 @@ public class EmployeeController {
     }
 
     @PostMapping("/request-holiday")
-    public RedirectView requestHoliday(@RequestParam("file") MultipartFile file, @RequestParam Map<String, String> params, Authentication authentication, RedirectAttributes ra) {
-        RedirectView rv = new RedirectView("/tom/");
+    public ModelAndView requestHoliday(@RequestParam("file") MultipartFile file, @RequestParam Map<String, String> params, Authentication authentication, RedirectAttributes ra) {
+        ModelAndView mv = new ModelAndView("redirect:/");
         try {
             employeeService.addHolidayRequest(authentication.getName(), params, file);
             ra.addFlashAttribute("upperNotification", "Your request was sent to your team leader!");
         } catch (FileStorageException e) {
             ra.addFlashAttribute("upperNotification", e.getMessage());
+        } catch (NotEnoughDaysException e) {
+            mv = new ModelAndView("request-holiday");
+            mv.addObject("error", e.getMessage());
         }
-        return rv;
+        return mv;
     }
 
     @GetMapping("/report-issue")

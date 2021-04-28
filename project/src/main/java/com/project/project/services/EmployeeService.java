@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.project.dtos.CalendarEvent;
 import com.project.project.dtos.RequestType;
 import com.project.project.exceptions.FileStorageException;
+import com.project.project.exceptions.NotEnoughDaysException;
 import com.project.project.models.Account;
 import com.project.project.models.HolidayRequest;
 import com.project.project.dtos.RequestStatus;
@@ -63,7 +64,7 @@ public class EmployeeService {
     }
 
 
-    public void addHolidayRequest(String username, Map<String, String> params, MultipartFile file) throws FileStorageException {
+    public void addHolidayRequest(String username, Map<String, String> params, MultipartFile file) throws FileStorageException, NotEnoughDaysException {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         if (accountOptional.isPresent()) {
             Date start_date;
@@ -95,6 +96,32 @@ public class EmployeeService {
             if (newHolidayRequest.getRequester().getTeamLeader() == null) {
                 newHolidayRequest.setStatus(RequestStatus.accTl);
             }
+            if (newHolidayRequest.getType() == RequestType.Rel) {
+                Calendar startCal = Calendar.getInstance();
+                startCal.setTime(newHolidayRequest.getStart());
+
+                Calendar endCal = Calendar.getInstance();
+                endCal.setTime(newHolidayRequest.getEnd());
+
+                int workDays = 0;
+
+                if (startCal.getTimeInMillis() != endCal.getTimeInMillis()) {
+                    do {
+                        if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                            ++workDays;
+                        }
+                        startCal.add(Calendar.DAY_OF_MONTH, 1);
+                    } while (startCal.getTimeInMillis() < endCal.getTimeInMillis());
+                }
+                Account account = newHolidayRequest.getRequester();
+                int remainingDays = account.getRemainingDays();
+                if(remainingDays-workDays<0){
+                    throw new NotEnoughDaysException("Sorry! Not enough vacation days");
+                }
+                account.setRemainingDays(remainingDays-workDays);
+                accountRepository.save(account);
+            }
+            
             holidayRequestRepository.save(newHolidayRequest);
 
             if (RequestType.valueOf(params.get("requestTypeId")) == RequestType.Med) {
