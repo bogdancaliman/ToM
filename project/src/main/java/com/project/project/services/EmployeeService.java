@@ -121,7 +121,7 @@ public class EmployeeService {
                 account.setRemainingDays(remainingDays-workDays);
                 accountRepository.save(account);
             }
-            
+
             holidayRequestRepository.save(newHolidayRequest);
 
             if (RequestType.valueOf(params.get("requestTypeId")) == RequestType.Med) {
@@ -221,5 +221,10 @@ public class EmployeeService {
     public boolean isTeamLeader(String username) {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         return accountOptional.filter(account -> !accountRepository.findAllByTeamLeader(account).isEmpty()).isPresent();
+    }
+
+    public List<CalendarEvent> loadHolidayRequestsOfTeamLeaderForCalendarById(String employeeId) throws UserNotFoundException {
+        Optional<Employee> employeeOptional =employeeRepository.findById(employeeId);
+        return loadHolidayRequestsOfTeamLeaderForCalendar(employeeOptional.get().getAccount().getUsername());
     }
 }

@@ -60,7 +60,7 @@ public class EmployeeController {
         ModelAndView mv = new ModelAndView("redirect:/");
         try {
             employeeService.addHolidayRequest(authentication.getName(), params, file);
-            ra.addFlashAttribute("upperNotification", "Your request was sent to your team leader!");
+            ra.addFlashAttribute("upperNotification", "Your request will be processed!");
         } catch (FileStorageException e) {
             ra.addFlashAttribute("upperNotification", e.getMessage());
         } catch (NotEnoughDaysException e) {
@@ -122,6 +122,16 @@ public class EmployeeController {
                 .contentType(MediaType.parseMediaType(databaseFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + databaseFile.getFileName() + ".pdf\"")
                 .body(new ByteArrayResource(databaseFile.getData()));
+    }
+
+    @GetMapping("/company-calendar")
+    @ResponseBody
+    public List<CalendarEvent> companyCalendar(@RequestParam("id") String employeeId) {
+        try {
+            return employeeService.loadHolidayRequestsOfTeamLeaderForCalendarById(employeeId);
+        } catch (UserNotFoundException e) {
+            return null;
+        }
     }
 
 }

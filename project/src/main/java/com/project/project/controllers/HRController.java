@@ -1,14 +1,18 @@
 package com.project.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.project.project.dtos.CalendarEvent;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import com.project.project.exceptions.UsedEmailException;
 import com.project.project.exceptions.SignUpException;
 import com.project.project.services.HRService;
+import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.services.DepartmentService;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -46,5 +50,12 @@ public class HRController {
         return mv;
          
         }
+
+    @GetMapping("/company-schedule")
+    public ModelAndView companySchedule() {
+        ModelAndView mv = new ModelAndView("company-schedule");
+        mv.addObject("departments", departmentService.loadDepartments());
+        return mv;
+    }
 
 }
