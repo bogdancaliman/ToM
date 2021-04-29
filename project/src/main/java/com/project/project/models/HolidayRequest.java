@@ -10,8 +10,11 @@ import com.project.project.enums.RequestStatus;
 import com.project.project.enums.RequestType;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -49,6 +52,11 @@ public class HolidayRequest implements Serializable {
     @JoinColumn(name = "FK_delegate")
     private Account delegate;
 
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Feedback> requestFeedback = new HashSet<>();
+
     public HolidayRequest(RequestType type, RequestStatus status, String description, Date start, Date end, Account requester, Account delegate) {
         this.type = type;
         this.status = status;
@@ -57,5 +65,25 @@ public class HolidayRequest implements Serializable {
         this.end = end;
         this.requester = requester;
         this.delegate = delegate;
+    }
+
+    public int getWorkingDays() {
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(start);
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(end);
+
+        int workDays = 0;
+
+        if (startCal.getTimeInMillis() != endCal.getTimeInMillis()) {
+            do {
+                if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                    ++workDays;
+                }
+                startCal.add(Calendar.DAY_OF_MONTH, 1);
+            } while (startCal.getTimeInMillis() < endCal.getTimeInMillis());
+        }
+        return workDays;
     }
 }
