@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.project.project.dtos.CredentialsEmail;
+
+import com.project.project.emails.CredentialsEmail;
 import com.project.project.models.Account;
 import com.project.project.models.Employee;
 import com.project.project.models.IssueRequest;

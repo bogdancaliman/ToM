@@ -1,4 +1,4 @@
-package com.project.project.dtos;
+package com.project.project.emails;
 
 import lombok.Getter;
 import org.thymeleaf.context.Context;

@@ -53,4 +53,12 @@ public class HRController {
         return mv;
     }
 
+    @GetMapping("/pending-holiday-requests-hr")
+    public ModelAndView pendingHolidayRequestsHr(@RequestParam(name = "departmentId", required = false) String departmentId) {
+        ModelAndView mv = new ModelAndView("pending-holiday-requests-hr");
+        mv.addObject("requests", hrService.loadRequestsOfDepartment(departmentId));
+        mv.addObject("selectedDepartment", departmentId);
+        mv.addObject("departments", formService.loadDepartments());
+        return mv;
+    }
 }

@@ -1,6 +1,7 @@
-package com.project.project.dtos;
+package com.project.project.emails;
 
 import lombok.Getter;
+
 import com.project.project.models.Account;
 
 @Getter

@@ -3,7 +3,8 @@ package com.project.project.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
-import com.project.project.dtos.ResetPasswordEmail;
+
+import com.project.project.emails.ResetPasswordEmail;
 import com.project.project.exceptions.*;
 import com.project.project.models.Account;
 import com.project.project.models.ResetPasswordRequest;

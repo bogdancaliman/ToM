@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import com.project.project.dtos.RequestStatus;
-import com.project.project.dtos.RequestType;
+import com.project.project.enums.RequestStatus;
+import com.project.project.enums.RequestType;
 
 import javax.persistence.*;
 import java.util.Date;

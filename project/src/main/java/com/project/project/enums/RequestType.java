@@ -1,4 +1,4 @@
-package com.project.project.dtos;
+package com.project.project.enums;
 
 public enum RequestType {
     Med("Medical"),

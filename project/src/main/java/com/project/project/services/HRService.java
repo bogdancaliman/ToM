@@ -7,6 +7,8 @@ import com.project.project.exceptions.SignUpException;
 import com.project.project.exceptions.UsedEmailException;
 import com.project.project.models.Department;
 import com.project.project.models.Employee;
+import com.project.project.models.HolidayRequest;
+import com.project.project.repositories.HolidayRequestRepository;
 
 import com.project.project.repositories.DepartmentRepository;
 import com.project.project.repositories.EmployeeRepository;
@@ -17,17 +19,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class HRService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final HolidayRequestRepository holidayRequestRepository;
 
     @Autowired
-    public HRService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository) {
+    public HRService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, HolidayRequestRepository holidayRequestRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+        this.holidayRequestRepository = holidayRequestRepository;
     }
 
     public void checkIfEmailIsAvailable(Map<String, String> params) throws SignUpException {
@@ -59,5 +64,9 @@ public class HRService {
             return newEmployee.getId();
         }
         throw new MissingDepartmentException("Department could not be found!");
+    }
+    
+    public List<HolidayRequest> loadRequestsOfDepartment(String departmentId) {
+        return holidayRequestRepository.findAllByRequester_Employee_Department_Id(departmentId);
     }
 }

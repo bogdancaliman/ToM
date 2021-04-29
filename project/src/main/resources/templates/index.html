@@ -95,7 +95,7 @@
 								sec:authorize="hasAnyAuthority('HR', 'ADMIN')"
 								th:href="@{/pending-holiday-requests-hr}"
 								class="list-group-item"
-								>Holiday requests of company</a
+								>Whole company requests</a
 							>
 							<a
 								sec:authorize="hasAnyAuthority('HR', 'ADMIN')"
@@ -121,6 +121,12 @@
 								class="list-group-item"
 								>Manage employee</a
 							>
+							<a
+								sec:authorize="hasAuthority('ADMIN') and hasAuthority('IT')"
+								th:href="@{/change-team-leader}"
+								class="list-group-item"
+								>Manage teams</a
+							>
 							<a th:href="@{/report-issue}" class="list-group-item">Report an issue</a>
 						</div>
 					</div>
@@ -130,7 +136,6 @@
 
 		<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
 		<script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.min.js}"></script>
-		<script th:src="@{js/alert-handler.js}"></script>
 		<script th:src="@{js/index.js}"></script>
 	</body>
 </html>
