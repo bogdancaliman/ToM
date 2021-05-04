@@ -2,6 +2,7 @@ package com.project.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ro.go.redhomeserver.tom.repositories.HolidayRequestRepository;
 import com.project.project.repositories.ResetPasswordRequestRepository;
 
 import java.util.Date;
@@ -10,13 +11,20 @@ import java.util.Date;
 public class ClearDataService {
 
     private final ResetPasswordRequestRepository resetPasswordRequestRepository;
+    private final HolidayRequestRepository holidayRequestRepository;
 
     @Autowired
-    public ClearDataService(ResetPasswordRequestRepository resetPasswordRequestRepository) {
+    public ClearDataService(ResetPasswordRequestRepository resetPasswordRequestRepository, HolidayRequestRepository holidayRequestRepository) {
         this.resetPasswordRequestRepository = resetPasswordRequestRepository;
+        this.holidayRequestRepository = holidayRequestRepository;
     }
 
     public void clearData() {
-        resetPasswordRequestRepository.deleteAllByExpirationDateIsLessThanEqual(new Date());
+        Calendar cal = Calendar.getInstance();
+        Date now = cal.getTime();
+        resetPasswordRequestRepository.deleteAllByExpirationDateIsLessThanEqual(now);
+        cal.add(Calendar.YEAR, -1); // to get previous year add -1
+        Date yearAgo = cal.getTime();
+        holidayRequestRepository.deleteAllByStartIsLessThan(yearAgo);
     }
 }
