@@ -26,20 +26,13 @@
 		<div class="container-fluid h-100">
 			<div class="row h-100">
 				<div class="col h-75">
-					<div
-						id="requests__calendar"
-						class="bg-secondary text-light mx-auto my-5 p-3 w-75 border border-info"
-					></div>
+					<div id="requests__calendar" class="bg-secondary text-light mx-auto my-5 p-3 w-75 border border-info"></div>
 				</div>
 				<div class="col bg-dark p-5 m-0">
 					<div class="w-100 h-100 text-light" th:if="${pendingHolidayRequests.isEmpty()}">
 						<h1 class="text-center">No pending requests!</h1>
 					</div>
-					<div
-						id="requests__pending"
-						class="border border-secondary p-2"
-						th:if="${!pendingHolidayRequests.isEmpty()}"
-					>
+					<div id="requests__pending" class="border border-secondary p-2 h-100 overflow-auto" th:if="${!pendingHolidayRequests.isEmpty()}" >
 						<div class="row m-0 text-info">
 							<h4 class="col-2 m-2 text-center">Details</h4>
 							<h4 class="col m-2 text-center">Name</h4>
