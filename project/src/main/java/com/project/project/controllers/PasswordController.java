@@ -35,7 +35,7 @@ public class PasswordController {
         this.activationService = activationService;
     }
 
-    @PostMapping("/resetPassword")
+    @PostMapping("/reset-password")
     public RedirectView resetPassword(@RequestParam("username") String username, HttpServletRequest request, RedirectAttributes ra) {
         RedirectView rv = new RedirectView("/tom/log-in");
         ra.addFlashAttribute("upperNotification", "Check your email address!");
