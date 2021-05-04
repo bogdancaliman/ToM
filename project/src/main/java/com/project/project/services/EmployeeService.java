@@ -3,7 +3,7 @@ package com.project.project.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.project.project.models.Account;
-import com.project.project.repositories.AccountRepository;;
+import com.project.project.repositories.AccountRepository;
 import com.project.project.models.Employee;
 import com.project.project.repositories.EmployeeRepository;
 
@@ -19,7 +19,6 @@ public class EmployeeService {
     public EmployeeService(AccountRepository accountRepository, EmployeeRepository employeeRepository) {
         this.accountRepository = accountRepository;
         this.employeeRepository = employeeRepository;
-        this.uploadedFileService = uploadedFileService;
     }
 
     public void removeEmployee(String employeeId) {

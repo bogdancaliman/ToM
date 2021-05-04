@@ -91,9 +91,7 @@
 								class="list-group-item"
 								>Add employee</a
 							>
-							<a
-								sec:authorize="hasAnyAuthority('HR', 'ADMIN')"
-								th:href="@{/pending-holiday-requests-hr}"
+							<a sec:authorize="hasAnyAuthority('HR', 'ADMIN')" th:href="@{/company-requests-feedback}"
 								class="list-group-item"
 								>Whole company requests</a
 							>

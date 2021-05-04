@@ -19,9 +19,8 @@ public class ITController {
     @Autowired
     public ITController(ITService itService, FormService formService, EmployeeService employeeService) {
         this.itService = itService;
-        this.issueRequestService = issueRequestService;
-        this.departmentService = departmentService;
         this.employeeService = employeeService;
+        this.formService = formService;
     }
 
     @GetMapping("/manage-department")

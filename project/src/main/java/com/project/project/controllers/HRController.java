@@ -1,11 +1,14 @@
 package com.project.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import com.project.project.exceptions.SignUpException;
+import com.project.project.services.FeedbackService;
 import com.project.project.services.HRService;
 import com.project.project.services.FormService;
 import java.util.Map;
@@ -15,18 +18,20 @@ public class HRController {
 
     private final HRService hrService;
     private final FormService formService;
+    private final FeedbackService feedbackService;
 
     @Autowired
-    public HRController(HRService hrService, FormService formService) {
+    public HRController(HRService hrService, FormService formService, FeedbackService feedbackService) {
         this.hrService = hrService;
         this.formService = formService;
+        this.feedbackService = feedbackService;
     }
 
     @GetMapping("/sign-up")
     public ModelAndView signUp() {
         ModelAndView mv = new ModelAndView("sign-up");
         mv.addObject("departments", formService.loadDepartments());
-        mv.addObject("error", null)
+        mv.addObject("error", null);
         return mv;
     }
     
@@ -53,12 +58,19 @@ public class HRController {
         return mv;
     }
 
-    @GetMapping("/pending-holiday-requests-hr")
+    @GetMapping("/company-requests-feedback")
     public ModelAndView pendingHolidayRequestsHr(@RequestParam(name = "departmentId", required = false) String departmentId) {
-        ModelAndView mv = new ModelAndView("pending-holiday-requests-hr");
+        ModelAndView mv = new ModelAndView("company-requests-feedback");
         mv.addObject("requests", hrService.loadRequestsOfDepartment(departmentId));
         mv.addObject("selectedDepartment", departmentId);
         mv.addObject("departments", formService.loadDepartments());
         return mv;
     }
+
+    @PostMapping("feedback")
+    public RedirectView feedback(@RequestParam Map<String, String> params, Authentication authentication) {
+        feedbackService.addFeedback(params.get("requestId"), params.get("description"), authentication.getName());
+        return new RedirectView("/tom/company-requests");
+    }
+
 }

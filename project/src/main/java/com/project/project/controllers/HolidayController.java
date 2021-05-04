@@ -53,7 +53,8 @@ public class HolidayController {
     public ModelAndView requestHoliday(@RequestParam("file") MultipartFile file, @RequestParam Map<String, String> params, Authentication authentication, RedirectAttributes ra) {
         ModelAndView mv = new ModelAndView("redirect:/");
         try {
-            formService.addHolidayRequest(authentication.getName(), params, file);
+            holidayService.addHolidayRequest(authentication.getName(), params, file);
+            //formService.addHolidayRequest(authentication.getName(), params, file);
             ra.addFlashAttribute("upperNotification", "Your request will be processed!");
         } catch (FileStorageException e) {
             ra.addFlashAttribute("upperNotification", e.getMessage());
