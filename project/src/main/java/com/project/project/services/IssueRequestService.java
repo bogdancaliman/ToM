@@ -9,7 +9,10 @@ import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.IssueRequestRepository;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,13 +27,13 @@ public class IssueRequestService {
         this.issueRequestRepository = issueRequestRepository;
     }
 
-    public void addIssueRequest(String username, Map<String, String> params) throws UserNotFoundException {
+    public IssueRequest addIssueRequest(String username, Map<String, String> params) throws UserNotFoundException {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
-        if(accountOptional.isPresent()) {
-            issueRequestRepository.save(new IssueRequest(params.get("description"), accountOptional.get()));
-        } else {
+        if (accountOptional.isPresent())
+            return issueRequestRepository.save(new IssueRequest(params.get("description"), accountOptional.get()));
+        else
             throw new UserNotFoundException("User " + username + " was not found!");
-        }
+        
     }
 
     public List<PendingIssue> loadAllPendingIssueRequests() {

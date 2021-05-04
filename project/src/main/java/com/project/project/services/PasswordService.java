@@ -33,7 +33,7 @@ public class PasswordService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void validatePassword(String password, String verification) throws SignUpException {
+    public int validatePassword(String password, String verification) throws SignUpException {
         if(!password.equals(verification))
             throw new PasswordVerificationException("The password does not match!");
 
@@ -53,19 +53,20 @@ public class PasswordService {
 
         if( password.length() < 8 || iPasswordScore < 4)
             throw new WeakPasswordException("The password is too weak!");
-    }
+        return iPasswordScore;
+        }
 
-    public void updateAccountPasswordById(String id, String password) throws SignUpException {
+    public Account updateAccountPasswordById(String id, String password) throws SignUpException {
         try {
             Optional<Account> accountOptional = accountRepository.findById(id);
-            if(!accountOptional.isPresent()) {
+            if(!accountOptional.isPresent()) 
                 throw new UserNotFoundException("User was not found!");
-            }
+            
             Account account = accountOptional.get();
-            String saltedPass = password+account.getSalt();
-            account.setPassword(passwordEncoder.encode(saltedPass));
-            accountRepository.save(account);
             resetPasswordRequestRepository.deleteAllByAccount(account);
+            String saltedPass = password + account.getSalt();
+            account.setPassword(passwordEncoder.encode(saltedPass));
+            return accountRepository.save(account);
         } catch (UserNotFoundException e) {
             throw new SignUpException("There was an error in the sign up process!");
         }
@@ -80,7 +81,7 @@ public class PasswordService {
         return requestOptional.get().getAccount().getId();
     }
     
-    public void addResetRequest(String username, String hostLink) throws SystemException, UserNotFoundException {
+    public ResetPasswordRequest addResetRequest(String username, String hostLink) throws SystemException, UserNotFoundException {
         try {
             Optional<Account> accountOptional = accountRepository.findByUsername(username);
             if(!accountOptional.isPresent())
@@ -94,7 +95,7 @@ public class PasswordService {
             ResetPasswordRequest req = new ResetPasswordRequest(account, UUID.randomUUID().toString(), calendar.getTime());
             ResetPasswordEmail data = new ResetPasswordEmail(account, hostLink + "/validate-password-reset-request?token=" + req.getToken());
             emailService.sendEmail(data);
-            resetPasswordRequestRepository.save(req);
+            return resetPasswordRequestRepository.save(req);
         } catch (MailException e) {
             throw new SystemException("There was an error in sending the email!");
         }

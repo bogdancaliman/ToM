@@ -5,13 +5,8 @@ import org.springframework.stereotype.Service;
 import com.project.project.exceptions.MissingDepartmentException;
 import com.project.project.exceptions.SignUpException;
 import com.project.project.exceptions.UsedEmailException;
-import com.project.project.models.Department;
-import com.project.project.models.Employee;
-import com.project.project.models.HolidayRequest;
-import com.project.project.repositories.HolidayRequestRepository;
-
-import com.project.project.repositories.DepartmentRepository;
-import com.project.project.repositories.EmployeeRepository;
+import com.project.project.models.*;
+import com.project.project.repositories.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,12 +22,16 @@ public class HRService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final HolidayRequestRepository holidayRequestRepository;
-
+    private final FeedbackRepository feedbackRepository;
+    private final AccountRepository accountRepository;
+    
     @Autowired
-    public HRService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, HolidayRequestRepository holidayRequestRepository) {
+    public HRService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, HolidayRequestRepository holidayRequestRepository, FeedbackRepository feedbackRepository, AccountRepository accountRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.holidayRequestRepository = holidayRequestRepository;
+        this.feedbackRepository = feedbackRepository;
+        this.accountRepository = accountRepository;
     }
 
     public void checkIfEmailIsAvailable(Map<String, String> params) throws SignUpException {
@@ -68,5 +67,14 @@ public class HRService {
     
     public List<HolidayRequest> loadRequestsOfDepartment(String departmentId) {
         return holidayRequestRepository.findAllByRequester_Employee_Department_Id(departmentId);
+    }
+    
+    public Feedback addFeedback(String requestId, String description, String username) {
+        Optional<HolidayRequest> holidayRequestOptional = holidayRequestRepository.findById(requestId);
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        if(holidayRequestOptional.isPresent() && accountOptional.isPresent())
+            return feedbackRepository.save(new Feedback(holidayRequestOptional.get(), description, accountOptional.get()));
+        else
+            return null;
     }
 }

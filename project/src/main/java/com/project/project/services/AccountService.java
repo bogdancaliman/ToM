@@ -9,11 +9,11 @@ import com.project.project.emails.CredentialsEmail;
 import com.project.project.models.Account;
 import com.project.project.models.Employee;
 import com.project.project.models.IssueRequest;
+import com.project.project.exceptions.SystemException;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.EmployeeRepository;
 import com.project.project.repositories.IssueRequestRepository;
 
-import javax.transaction.SystemException;
 import java.util.Optional;
 import java.util.Random;
 
@@ -35,12 +35,12 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void generateAccount(String employeeId, String teamLeaderId) throws SystemException {
+    public Account generateAccount(String employeeId, String teamLeaderId) throws SystemException {
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
         Optional<Account> teamLeaderOptional = accountRepository.findByEmployee_Id(teamLeaderId);
 
         if (!employeeOptional.isPresent())
-            throw new SystemException();
+            throw new SystemException("There was an error in the system!");
 
         String username;
         String password;
@@ -84,7 +84,7 @@ public class AccountService {
 
         try {
             emailService.sendEmail(data);
-            accountRepository.save(acc);
+            return accountRepository.save(acc);
         } catch (MailException e) {
             throw new SystemException("The user with id: " + employeeId + "doesn't have an account due to some system problems!");
         }
