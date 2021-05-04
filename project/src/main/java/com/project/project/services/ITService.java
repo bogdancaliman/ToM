@@ -22,7 +22,7 @@ public class ITService {
     private final AccountRepository accountRepository;
 
     @Autowired
-    public ITService(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository, IssueRequestRepository issueRequestRepository, AccountRepository accountRepository) 
+    public ITService(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository, IssueRequestRepository issueRequestRepository, AccountRepository accountRepository) {
         this.departmentRepository = departmentRepository;
         this.employeeRepository = employeeRepository;
         this.issueRequestRepository = issueRequestRepository;

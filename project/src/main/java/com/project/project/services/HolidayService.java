@@ -41,7 +41,7 @@ public class HolidayService {
         this.uploadedFileService = uploadedFileService;
     }
 
-    public HolidayRequest addHolidayRequest(String username, Map<String, String> params, MultipartFile file) throws IOException, NotEnoughDaysException {
+    public HolidayRequest addHolidayRequest(String username, Map<String, String> params, MultipartFile file) throws IOException, NotEnoughDaysException, ParseException, UserNotFoundException {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         if (accountOptional.isPresent()) {
             Date start_date;

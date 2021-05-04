@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.project.services.ClearDataService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @Controller
 public class AuthenticationController {
@@ -39,10 +40,12 @@ public class AuthenticationController {
         mv.addObject("isTeamLeader", authenticationService.amITeamLeader(authentication.getName()));
         try {
             mv.addObject("employee", authenticationService.getMyEmployeeData(authentication.getName()));
+            return mv;
         } catch (UserNotFoundException e) {
             httpServletResponse.sendRedirect("/tom/log-out");
+            return null;
         }
-        return mv;
+        
     }
 
     @GetMapping("/log-in")
