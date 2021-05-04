@@ -21,6 +21,11 @@ import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.models.UploadedFile;
 import com.project.project.services.FormService;
 import com.project.project.services.HolidayService;
+import com.project.project.exceptions.SystemException;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 
@@ -56,11 +61,14 @@ public class HolidayController {
             holidayService.addHolidayRequest(authentication.getName(), params, file);
             //formService.addHolidayRequest(authentication.getName(), params, file);
             ra.addFlashAttribute("upperNotification", "Your request will be processed!");
-        } catch (FileStorageException e) {
+        } catch (IOException | UserNotFoundException e) {
             ra.addFlashAttribute("upperNotification", e.getMessage());
         } catch (NotEnoughDaysException e) {
             mv = new ModelAndView("request-holiday");
             mv.addObject("error", e.getMessage());
+        } catch (ParseException e) {
+            mv = new ModelAndView("request-holiday");
+            mv.addObject("error", "There was an error in the system! Try again later!");
         }
         return mv;
     }
@@ -98,8 +106,13 @@ public class HolidayController {
 
     @PostMapping("/update-holiday-request")
     @ResponseBody
-    public void updateHolidayRequest(@RequestParam("id") String holidayRequestId, @RequestParam("act") String action) {
-        holidayService.updateStatusOfHolidayRequest(holidayRequestId, action);
+    public void updateHolidayRequest(@RequestParam("id") String holidayRequestId, @RequestParam("act") String action, RedirectAttributes ra, HttpServletResponse response) throws IOException {
+        try {
+            holidayService.updateStatusOfHolidayRequest(holidayRequestId, action);
+        } catch (SystemException e) {
+            ra.addFlashAttribute("upperNotification", "Confirmation email was not sent!");
+            response.sendRedirect("/tom/");
+        }
     }
 
     @GetMapping("/download-file")

@@ -3,7 +3,6 @@ package com.project.project.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.project.project.exceptions.FileStorageException;
 import com.project.project.models.HolidayRequest;
 import com.project.project.models.UploadedFile;
 import com.project.project.repositories.HolidayRequestRepository;
@@ -24,15 +23,11 @@ public class UploadedFileService {
         this.holidayRequestRepository = holidayRequestRepository;
     }
 
-    public UploadedFile storeFile(MultipartFile file, HolidayRequest request) throws FileStorageException {
+    public UploadedFile storeFile(MultipartFile file, HolidayRequest request) throws IOException  {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String fileName = request.getRequester().getUsername() + '-' + timestamp.toString();
-        try {
-            UploadedFile uploadedFile = new UploadedFile(fileName, file.getContentType(), file.getBytes(), request);
-            return uploadedFileRepository.save(uploadedFile);
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-        }
+        UploadedFile uploadedFile = new UploadedFile(fileName, file.getContentType(), file.getBytes(), request);
+        return uploadedFileRepository.save(uploadedFile);
     }
 
     public UploadedFile getFileByRequestId(String requestId) {

@@ -1,12 +1,13 @@
 package com.project.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.project.project.emails.HolidayStatusUpdateEmail;
 import com.project.project.enums.RequestStatus;
 import com.project.project.enums.RequestType;
-import com.project.project.exceptions.FileStorageException;
+import com.project.project.exceptions.SystemException;
 import com.project.project.exceptions.NotEnoughDaysException;
 import com.project.project.exceptions.UserNotFoundException;
 import com.project.project.models.Account;
@@ -15,6 +16,7 @@ import com.project.project.models.UploadedFile;
 import com.project.project.repositories.AccountRepository;
 import com.project.project.repositories.HolidayRequestRepository;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,19 +41,14 @@ public class HolidayService {
         this.uploadedFileService = uploadedFileService;
     }
 
-    public void addHolidayRequest(String username, Map<String, String> params, MultipartFile file) throws FileStorageException, NotEnoughDaysException {
+    public HolidayRequest addHolidayRequest(String username, Map<String, String> params, MultipartFile file) throws IOException, NotEnoughDaysException {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         if (accountOptional.isPresent()) {
             Date start_date;
             Date end_date;
-            try {
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                start_date = format.parse(params.get("startDate"));
-                end_date = format.parse(params.get("endDate"));
-            } catch (ParseException e) {
-                start_date = new Date();
-                end_date = new Date();
-            }
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            start_date = format.parse(params.get("startDate"));
+            end_date = format.parse(params.get("endDate"));
 
             Account delegate;
 
@@ -84,43 +81,17 @@ public class HolidayService {
                 accountRepository.save(account);
             }
 
-            holidayRequestRepository.save(newHolidayRequest);
-
             if (RequestType.valueOf(params.get("requestTypeId")) == RequestType.Med) {
-                try {
-                    uploadedFileService.storeFile(file, newHolidayRequest);
-                } catch (FileStorageException e) {
-                    holidayRequestRepository.delete(newHolidayRequest);
-                    throw e;
-                }
+                uploadedFileService.storeFile(file, newHolidayRequest);
             }
-        }
-    }
 
 
-    private List<HolidayRequest> loadHolidayRequestsBasedOnUserAndStatus(String username, RequestStatus status) throws UserNotFoundException {
-        Optional<Account> accountOptional = accountRepository.findByUsername(username);
-        return accountOptional.map(account -> holidayRequestRepository.findAllByRequesterAndStatus(account, status)).orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
+            return holidayRequestRepository.save(newHolidayRequest);
+        } else
+            throw new UserNotFoundException("User " + username + "was not found!");
     }
 
-    public List<HolidayRequest> loadMyAcceptedHolidayRequests(String username) throws UserNotFoundException {
-        return loadHolidayRequestsBasedOnUserAndStatus(username, RequestStatus.accTl);
-    }
-
-    public List<HolidayRequest> loadMyDeclinedHolidayRequests(String username) throws UserNotFoundException {
-        return loadHolidayRequestsBasedOnUserAndStatus(username, RequestStatus.decTL);
-    }
-
-    public List<HolidayRequest> loadMyPendingHolidayRequests(String username) throws UserNotFoundException {
-        return loadHolidayRequestsBasedOnUserAndStatus(username, RequestStatus.sentTL);
-    }
-    
-    public List<HolidayRequest> loadPendingHolidayRequestsForATeamLeader(String username) throws UserNotFoundException {
-        Optional<Account> accountOptional = accountRepository.findByUsername(username);
-        return accountOptional.map(account -> holidayRequestRepository.findAllByRequester_TeamLeaderAndStatus(account, RequestStatus.sentTL)).orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
-    }
-
-    public void updateStatusOfHolidayRequest(String holidayRequestId, String action) {
+    public HolidayRequest updateStatusOfHolidayRequest(String holidayRequestId, String action) throws SystemException {
         Optional<HolidayRequest> requestOptional = holidayRequestRepository.findById(holidayRequestId);
         if (requestOptional.isPresent()) {
             String actionEmail = "";
@@ -137,12 +108,39 @@ public class HolidayService {
                 accountRepository.save(account);
                 actionEmail = "declined";
             }
-            holidayRequestRepository.save(request);
-            emailService.sendEmail(new HolidayStatusUpdateEmail(request.getRequester(), actionEmail));
+            try {
+                emailService.sendEmail(new HolidayStatusUpdateEmail(request.getRequester(), actionEmail));
+                return holidayRequestRepository.save(request);
+            } catch (MailException e) {
+                throw new SystemException("There was a problem in the system!");
+            }
         }
+        return null;
     }
 
     public UploadedFile getFileOfRequest(String holidayRequestId) {
         return uploadedFileService.getFileByRequestId(holidayRequestId);
+    }
+
+    public List<HolidayRequest> loadPendingHolidayRequestsForATeamLeader(String username) throws UserNotFoundException {
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        return accountOptional.map(account -> holidayRequestRepository.findAllByRequester_TeamLeaderAndStatus(account, RequestStatus.sentTL)).orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
+    }
+
+    public List<HolidayRequest> loadMyAcceptedHolidayRequests(String username) throws UserNotFoundException {
+        return loadHolidayRequestsBasedOnUserAndStatus(username, RequestStatus.accTl);
+    }
+
+    public List<HolidayRequest> loadMyDeclinedHolidayRequests(String username) throws UserNotFoundException {
+        return loadHolidayRequestsBasedOnUserAndStatus(username, RequestStatus.decTL);
+    }
+
+    public List<HolidayRequest> loadMyPendingHolidayRequests(String username) throws UserNotFoundException {
+        return loadHolidayRequestsBasedOnUserAndStatus(username, RequestStatus.sentTL);
+    }
+
+    private List<HolidayRequest> loadHolidayRequestsBasedOnUserAndStatus(String username, RequestStatus status) throws UserNotFoundException {
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        return accountOptional.map(account -> holidayRequestRepository.findAllByRequesterAndStatus(account, status)).orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
     }
 }
