@@ -3,6 +3,7 @@ package com.project.project.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.project.project.emails.HolidayStatusUpdateEmail;
 import com.project.project.enums.RequestStatus;
 import com.project.project.enums.RequestType;
 import com.project.project.exceptions.FileStorageException;
@@ -17,17 +18,22 @@ import com.project.project.repositories.HolidayRequestRepository;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class HolidayService {
 
+    private final EmailService emailService;
     private final AccountRepository accountRepository;
     private final HolidayRequestRepository holidayRequestRepository;
     private final UploadedFileService uploadedFileService;
 
     @Autowired
-    public HolidayService(AccountRepository accountRepository, HolidayRequestRepository holidayRequestRepository, UploadedFileService uploadedFileService) {
+    public HolidayService(EmailService emailService, AccountRepository accountRepository, HolidayRequestRepository holidayRequestRepository, UploadedFileService uploadedFileService) {
+        this.emailService = emailService;
         this.accountRepository = accountRepository;
         this.holidayRequestRepository = holidayRequestRepository;
         this.uploadedFileService = uploadedFileService;
@@ -100,17 +106,22 @@ public class HolidayService {
     public void updateStatusOfHolidayRequest(String holidayRequestId, String action) {
         Optional<HolidayRequest> requestOptional = holidayRequestRepository.findById(holidayRequestId);
         if (requestOptional.isPresent()) {
+            String actionEmail = "";
             HolidayRequest request = requestOptional.get();
-            if (action.equals("acc"))
+            if (action.equals("acc")) {
                 request.setStatus(RequestStatus.accTl);
+                actionEmail = "accepted";
+            }
 
             if (action.equals("dec")) {
                 request.setStatus(RequestStatus.decTL);
                 Account account = request.getRequester();
-                account.setRemainingDays(account.getRemainingDays()+request.getWorkingDays());
+                account.setRemainingDays(account.getRemainingDays() + request.getWorkingDays());
                 accountRepository.save(account);
+                actionEmail = "declined";
             }
             holidayRequestRepository.save(request);
+            emailService.sendEmail(new HolidayStatusUpdateEmail(request.getRequester(), actionEmail));
         }
     }
 
